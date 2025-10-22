@@ -1,1 +1,1 @@
-Donkey Horse is a miniaml event aggregator
+Donkey Horse is a minimal event aggregator
