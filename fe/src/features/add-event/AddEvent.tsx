@@ -7,9 +7,12 @@ export default function addNewEvent() {
   const initialValue = { name: "", venue: "", eventdate: "", link: "" };
 
   const [formData, setFormData] = useState<Event>(initialValue);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const mutation = useMutation({
     mutationFn: addEvent,
+    onSuccess: () => setIsLoading(false),
+    onError: () => setIsLoading(false),
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -22,6 +25,8 @@ export default function addNewEvent() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    setIsLoading(true);
 
     const dataToSend = {
       ...formData,
@@ -45,6 +50,7 @@ export default function addNewEvent() {
           placeholder="name"
           required
           value={formData.name}
+          disabled={isLoading}
           onChange={handleChange}
         ></input>
         <input
@@ -52,6 +58,7 @@ export default function addNewEvent() {
           placeholder="venue"
           required
           value={formData.venue}
+          disabled={isLoading}
           onChange={handleChange}
         ></input>
         <input
@@ -61,17 +68,20 @@ export default function addNewEvent() {
           className="w-full"
           required
           value={formData.eventdate}
+          disabled={isLoading}
           onChange={handleChange}
         ></input>
         <input
           name="link"
           placeholder="link"
           value={formData.link}
+          disabled={isLoading}
           onChange={handleChange}
         ></input>
         <button
           type="submit"
           className="border p-2 rounded-md mt-3 hover:bg-white hover:text-black hover:cursor-pointer"
+          disabled={isLoading}
         >
           add event
         </button>

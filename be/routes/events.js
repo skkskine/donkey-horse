@@ -5,7 +5,7 @@ const router = express.Router();
 router.get("/events", async (req, res) => {
   try {
     const result = await db.query(
-      "SELECT * FROM events ORDER BY eventdate ASC"
+      "SELECT * FROM events WHERE eventdate >= CURRENT_DATE - INTERVAL '1 day' AND eventdate < CURRENT_DATE + INTERVAL '14 days' ORDER BY eventdate ASC"
     );
     res.json({ items: result.rows });
   } catch (error) {

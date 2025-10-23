@@ -4,31 +4,50 @@ import { getEvents } from "../../api/api";
 export default function Homepage() {
   const { data } = useQuery({ queryKey: ["getEvents"], queryFn: getEvents });
 
-  const events = data?.items.map((event) => {
+  const events = (data?.items || []).map((event) => {
     return (
-      <div key={event.id}>
-        <span>{new Date(event.eventdate).toLocaleDateString("it-IT")}</span>
-        {" -> "}
-        <span>{event.name}</span> @{" "}
-        {event.link ? (
-          <a href={event.link} target="_blank" className="underline">
-            {event.venue}
-          </a>
-        ) : (
-          <span>{event.venue}</span>
-        )}
+      <div key={event.id} className="flex">
+        <div className="shrink-0">
+          <span className="text-orange-300 italic">
+            {new Date(event.eventdate).toLocaleDateString("it-IT")}
+          </span>
+          <span className="text-blue-600">{" ---> "}</span>
+        </div>
+        <div className="pl-1.5">
+          <span className="text-yellow-300"> {event.name}</span>{" "}
+          <span className="text-green-500">@</span>{" "}
+          {event.link ? (
+            <a
+              href={event.link}
+              target="_blank"
+              className="underline text-yellow-300"
+            >
+              {event.venue}
+            </a>
+          ) : (
+            <span className="text-yellow-300">{event.venue}</span>
+          )}
+        </div>
       </div>
     );
   });
 
   return (
     <>
-      <p className="text-sm mb-3">
-        donkey horse is a minimal event aggreator for your diy and local events
-        <br />
-        atm in alpha stage, if you want to add your events ask!
+      <p className="uppercase mb-3 text-red-700 italic text-xl">
+        i-oooooh, i-oooooooh!!!!!
       </p>
-      {events}
+      <p className="text-sm mb-3">
+        donkey horse doesnt understand you
+        <br />
+        atm in alpha stage, if you want to add your events sniff{" "}
+        <a href="mailto:gianmaria@tuta.com" className="underline">
+          here
+        </a>
+      </p>
+      <div className="text-center">
+        <div className="text-left inline-block">{events}</div>
+      </div>
     </>
   );
 }
