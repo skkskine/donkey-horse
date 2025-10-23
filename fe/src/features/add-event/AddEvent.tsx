@@ -6,20 +6,20 @@ export default function addNewEvent() {
     mutationFn: addEvent,
   });
 
+  function handleSubmit() {
+    mutation.mutate({
+      name: "primo evento",
+      venue: "nadir",
+      eventDate: new Date(),
+      link: "bel link",
+    });
+  }
+
   return (
     <>
-      <button
-        onClick={() =>
-          mutation.mutate({
-            name: "primo evento",
-            venue: "nadir",
-            eventDate: new Date(),
-            link: "bel link",
-          })
-        }
-      >
-        add entry
-      </button>
+      <form onSubmit={handleSubmit}>
+        <button type="submit">add</button>
+      </form>
     </>
   );
 }
