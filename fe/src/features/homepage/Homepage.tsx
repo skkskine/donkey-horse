@@ -1,13 +1,32 @@
-import { useQuery } from "@tanstack/react-query";
-import { getEventsList } from "../../api/api";
+import { useMutation } from "@tanstack/react-query";
+import { addEvent } from "../../api/api";
 
 export default function Homepage() {
-  const { data } = useQuery({
+  /*const { data } = useQuery({
     queryKey: ["getEventsList"],
     queryFn: getEventsList,
   });
 
-  console.log(data);
+  console.log(data);*/
 
-  return <></>;
+  const mutation = useMutation({
+    mutationFn: addEvent,
+  });
+
+  return (
+    <>
+      <button
+        onClick={() =>
+          mutation.mutate({
+            name: "primo evento",
+            venue: "nadir",
+            eventDate: new Date(),
+            link: "bel link",
+          })
+        }
+      >
+        add entry
+      </button>
+    </>
+  );
 }

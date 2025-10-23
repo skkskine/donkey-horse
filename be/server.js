@@ -1,13 +1,24 @@
+// be/src/index.js
 const express = require("express");
-const app = express();
-const port = 3600;
 const cors = require("cors");
+require("dotenv").config();
+
+const eventsRouter = require("./routes/events");
+
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
+app.use(express.json());
 
-app.get("/getEventsList", (req, res) => {
-  res.json({ events: [] });
+// Routes
+app.use("/api", eventsRouter);
+
+// Health check
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
 });
 
-app.listen(port);
-console.log("app listening on port");
+app.listen(PORT, () => {
+  console.log(`🚀 Server in ascolto su http://localhost:${PORT}`);
+});
