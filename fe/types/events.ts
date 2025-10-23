@@ -1,6 +1,6 @@
 export interface Event {
   name: string;
   venue: string;
-  eventDate: Date;
+  eventDate: string;
   link: string;
 }
