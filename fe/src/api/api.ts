@@ -17,6 +17,7 @@ async function post(url: string, body: unknown) {
 // API
 
 export const addEvent = async (event: Event): Promise<Event> => {
+  console.log(event);
   const res = await post("events", event);
   return res.json();
 };

@@ -1,12 +1,12 @@
 const { Pool } = require("pg");
-const { default: ensureTables } = require("./initDb");
 require("dotenv").config();
+const { ensureTables } = require("./initDb");
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-await ensureTables();
+ensureTables(pool);
 
 pool.on("connect", () => {
   console.log("✅ Connesso al database PostgreSQL");

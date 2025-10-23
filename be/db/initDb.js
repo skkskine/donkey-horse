@@ -1,4 +1,4 @@
-export default async function ensureTables() {
+async function ensureTables(pool) {
   try {
     // Items table
     await pool.query(`
@@ -17,3 +17,5 @@ export default async function ensureTables() {
     console.error("❌ Errore setup tabelle:", error);
   }
 }
+
+module.exports = { ensureTables };

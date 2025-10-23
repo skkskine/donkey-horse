@@ -45,12 +45,14 @@ export default function addNewEvent() {
           name="name"
           placeholder="name"
           required
+          value={formData.name}
           onChange={handleChange}
         ></input>
         <input
           name="venue"
           placeholder="venue"
           required
+          value={formData.venue}
           onChange={handleChange}
         ></input>
         <input
@@ -59,9 +61,15 @@ export default function addNewEvent() {
           type="date"
           className="w-full"
           required
+          value={formData.eventDate}
           onChange={handleChange}
         ></input>
-        <input name="link" placeholder="link" onChange={handleChange}></input>
+        <input
+          name="link"
+          placeholder="link"
+          value={formData.link}
+          onChange={handleChange}
+        ></input>
         <button
           type="submit"
           className="border p-2 rounded-md mt-3 hover:bg-white hover:text-black hover:cursor-pointer"

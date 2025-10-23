@@ -4,11 +4,11 @@ const router = express.Router();
 
 router.post("/events", async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, venue, eventDate, link } = req.body;
 
     const result = await db.query(
-      "INSERT INTO events (name) VALUES ($1) RETURNING *",
-      [name]
+      "INSERT INTO events (name, venue, eventDate, link) VALUES ($1, $2, $3, $4) RETURNING *",
+      [name, venue, eventDate, link]
     );
 
     res.status(201).json({ item: result.rows[0] });
