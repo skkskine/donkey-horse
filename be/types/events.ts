@@ -2,7 +2,7 @@ export interface Event {
   id: string;
   name: string;
   venue: string;
-  eventDate: Date;
+  eventdate: Date;
   link: string;
   createdAt: string;
 }

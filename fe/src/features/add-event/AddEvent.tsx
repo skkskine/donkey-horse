@@ -4,11 +4,12 @@ import { useState } from "react";
 import type { Event } from "../../../types/events";
 
 export default function addNewEvent() {
-  const [formData, setFormData] = useState<Event>({
-    name: "",
-    venue: "",
-    eventDate: "",
-    link: "",
+  const initialValue = { name: "", venue: "", eventdate: "", link: "" };
+
+  const [formData, setFormData] = useState<Event>(initialValue);
+
+  const mutation = useMutation({
+    mutationFn: addEvent,
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -19,19 +20,17 @@ export default function addNewEvent() {
     }));
   }
 
-  const mutation = useMutation({
-    mutationFn: addEvent,
-  });
-
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const dataToSend = {
       ...formData,
-      eventDate: new Date(formData.eventDate).toLocaleDateString("it-IT"),
+      eventDate: new Date(formData.eventdate).toLocaleDateString("it-IT"),
     };
 
     mutation.mutate(dataToSend);
+
+    setFormData(initialValue);
   }
 
   return (
@@ -56,12 +55,12 @@ export default function addNewEvent() {
           onChange={handleChange}
         ></input>
         <input
-          name="eventDate"
+          name="eventdate"
           placeholder="event date"
           type="date"
           className="w-full"
           required
-          value={formData.eventDate}
+          value={formData.eventdate}
           onChange={handleChange}
         ></input>
         <input
