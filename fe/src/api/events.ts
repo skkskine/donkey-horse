@@ -86,3 +86,14 @@ export const updateEvent = async ({
   });
   return res.json();
 };
+
+export const deleteEvent = async ({
+  id,
+}: {
+  id: string;
+}): Promise<{ item: EventData }> => {
+  const res = await authenticatedFetch(`event/${id}`, {
+    method: "DELETE",
+  });
+  return res.json();
+};

@@ -1,7 +1,7 @@
 // fe/src/components/Register.tsx
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export function Register() {
   const [email, setEmail] = useState("");
@@ -11,19 +11,19 @@ export function Register() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { register } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    // Validazione
     if (password !== confirmPassword) {
-      setError("Le password non coincidono");
+      setError("passwords are not the same");
       return;
     }
 
     if (password.length < 6) {
-      setError("La password deve essere di almeno 6 caratteri");
+      setError("password should be at least 8 characters");
       return;
     }
 
@@ -31,18 +31,18 @@ export function Register() {
 
     try {
       await register(email, password, username);
-      // Il redirect viene gestito da App.tsx
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Errore registrazione");
+      setError(err instanceof Error ? err.message : "registration error");
     } finally {
       setIsLoading(false);
+      navigate("/login");
     }
   };
 
   return (
     <div>
       <form
-        className="text-sm flex w-full mx-auto max-w-60 flex-col items-center gap-3 [&>input]:border-b [&>input]:outline-0 [&>input]:w-ful"
+        className="text-sm flex w-full mx-auto max-w-60 flex-col items-center gap-3 [&>input]:border-b [&>input]:outline-0 [&>input]:w-full"
         onSubmit={handleSubmit}
       >
         <input

@@ -1,6 +1,7 @@
 // fe/src/components/Login.tsx
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export function Login() {
   const [username, setUsername] = useState("");
@@ -8,6 +9,7 @@ export function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +22,7 @@ export function Login() {
       setError(err instanceof Error ? err.message : "login error");
     } finally {
       setIsLoading(false);
+      navigate("/");
     }
   };
 

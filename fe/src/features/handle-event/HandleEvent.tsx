@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { addEvent, getEvent, updateEvent } from "../../api/events";
+import { addEvent, deleteEvent, getEvent, updateEvent } from "../../api/events";
 import { useEffect, useState } from "react";
 import type { Event } from "../../types/events";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface Prop {
   type: "add" | "edit";
@@ -14,6 +14,7 @@ export default function HandleEvent({ type }: Prop) {
   const [formData, setFormData] = useState<Event>(initialValue);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   // edit mode
   const { data } = useQuery({
@@ -24,7 +25,19 @@ export default function HandleEvent({ type }: Prop) {
 
   const editMutation = useMutation({
     mutationFn: updateEvent,
-    onSuccess: () => setIsSubmitting(false),
+    onSuccess: () => {
+      setIsSubmitting(false);
+      navigate("/");
+    },
+    onError: () => setIsSubmitting(false),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteEvent,
+    onSuccess: () => {
+      setIsSubmitting(false);
+      navigate("/");
+    },
     onError: () => setIsSubmitting(false),
   });
 
@@ -82,6 +95,13 @@ export default function HandleEvent({ type }: Prop) {
 
     setFormData(initialValue);
   }
+
+  function handleDelete(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (id) {
+      deleteMutation.mutate({ id });
+    }
+  }
   // ----
 
   return (
@@ -131,6 +151,14 @@ export default function HandleEvent({ type }: Prop) {
         >
           {type} event
         </button>
+        {type === "edit" && (
+          <button
+            className="border p-2 rounded-md border-red-400 text-red-400 mt-1 hover:cursor-pointer hover:bg-red-500 hover:text-white"
+            onClick={handleDelete}
+          >
+            delete event
+          </button>
+        )}
       </form>
     </>
   );

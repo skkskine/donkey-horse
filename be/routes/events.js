@@ -69,4 +69,24 @@ router.post("/events", authMiddleware, async (req, res) => {
   }
 });
 
+router.delete("/event/:id", authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await db.query(
+      "DELETE FROM events WHERE id = $1 RETURNING *",
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "event not found" });
+    }
+
+    res.json({ item: result.rows[0] });
+  } catch (error) {
+    console.error("Errore query:", error);
+    res.status(500).json({ error: "server error" });
+  }
+});
+
 module.exports = router;
