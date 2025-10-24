@@ -3,6 +3,7 @@ import { addEvent, deleteEvent, getEvent, updateEvent } from "../../api/events";
 import { useEffect, useState } from "react";
 import type { Event } from "../../types/events";
 import { useNavigate, useParams } from "react-router-dom";
+import Button from "../../components/Button";
 
 interface Prop {
   type: "add" | "edit";
@@ -147,20 +148,13 @@ export default function HandleEvent({ type }: Prop) {
           disabled={isSubmitting}
           onChange={handleChange}
         ></input>
-        <button
-          type="submit"
-          className="border p-2 rounded-md mt-3 hover:bg-white hover:text-black hover:cursor-pointer"
-          disabled={isSubmitting}
-        >
+        <Button type="submit" className="mt-4" disabled={isSubmitting}>
           {type} event
-        </button>
+        </Button>
         {type === "edit" && (
-          <button
-            className="border p-2 rounded-md border-red-400 text-red-400 mt-1 hover:cursor-pointer hover:bg-red-500 hover:text-white"
-            onClick={() => handleDelete}
-          >
+          <Button styleType="danger" onClick={() => handleDelete}>
             delete event
-          </button>
+          </Button>
         )}
       </form>
     </>
