@@ -8,7 +8,7 @@ interface Prop {
 
 export default function ListItem({ isAuthenticated, event }: Prop) {
   return (
-    <div className="sm:flex mb-2 sm:mb-0">
+    <div className="sm:flex mb-2">
       {isAuthenticated && (
         <Link to={"/edit-event/" + event.id} className="mr-2 underline">
           [edit]
