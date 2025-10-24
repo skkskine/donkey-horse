@@ -8,3 +8,7 @@ export interface RegisterData {
   email: string;
   password: string;
 }
+
+export interface RegisterWithCodeData extends RegisterData {
+  invitationid: string;
+}

@@ -29,7 +29,13 @@ function App() {
         to="/add-event"
         className={({ isActive }) => highlightCurrentPage(isActive)}
       >
-        add event
+        add-event
+      </NavLink>
+      <NavLink
+        to="/invite"
+        className={({ isActive }) => highlightCurrentPage(isActive)}
+      >
+        invite
       </NavLink>
     </nav>
   );

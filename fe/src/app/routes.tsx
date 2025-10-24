@@ -5,6 +5,7 @@ import App from "./App";
 import { Login } from "../features/admin/Login";
 import { Register } from "../features/admin/Register";
 import { ProtectedRoute } from "../features/admin/ProtectedRoute";
+import Invite from "../features/invite/Invite";
 
 export const router = createBrowserRouter([
   {
@@ -13,7 +14,15 @@ export const router = createBrowserRouter([
     children: [
       { path: "/", element: <Homepage /> },
       { path: "/login", element: <Login /> },
-      { path: "/register", element: <Register /> },
+      {
+        path: "/register",
+        element: (
+          <ProtectedRoute>
+            <Register />
+          </ProtectedRoute>
+        ),
+      },
+      { path: "/register/:invitationid", element: <Register /> },
       {
         path: "/add-event",
         element: (
@@ -27,6 +36,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <HandleEvent type="edit" />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/invite",
+        element: (
+          <ProtectedRoute>
+            <Invite />
           </ProtectedRoute>
         ),
       },

@@ -2,6 +2,20 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../db/database");
 
+async function registerWithCode(req, res) {
+  const { invitationId } = req.body;
+
+  const result = await db.query(
+    "SELECT * FROM invitelinks WHERE invitationid = $1",
+    [invitationId]
+  );
+
+  // if the code is valid proceed with regstration
+  if (result.rows.length === 0) {
+    register(req, res);
+  }
+}
+
 async function register(req, res) {
   try {
     const { email, password, username } = req.body;
@@ -122,4 +136,4 @@ async function getCurrentUser(req, res) {
   }
 }
 
-module.exports = { register, login, getCurrentUser };
+module.exports = { register, login, getCurrentUser, registerWithCode };

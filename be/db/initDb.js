@@ -1,9 +1,8 @@
 async function ensureTables(pool) {
   try {
-    // Items table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS events (
-        id SERIAL PRIMARY KEY,
+         id BIGINT PRIMARY KEY DEFAULT (floor(random() * 1000000000000)::BIGINT),
         name VARCHAR(255) NOT NULL,
         venue TEXT NOT NULL,
         eventdate DATE NOT NULL,
@@ -14,11 +13,18 @@ async function ensureTables(pool) {
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
+        id BIGINT PRIMARY KEY DEFAULT (floor(random() * 1000000000000)::BIGINT),
         email VARCHAR(255) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
         username VARCHAR(255),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS invitelinks (
+        id BIGINT PRIMARY KEY DEFAULT (floor(random() * 1000000000000)::BIGINT),
+       invitationid VARCHAR(255) NOT NULL
       )
     `);
 

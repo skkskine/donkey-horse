@@ -9,6 +9,7 @@ import {
 import {
   login as apiLogin,
   register as apiRegister,
+  registerWithCode as apiRegisterWithCode,
   getCurrentUser,
 } from "../api/auth";
 
@@ -26,6 +27,12 @@ type AuthContextType = {
     email: string,
     password: string,
     username: string
+  ) => Promise<void>;
+  registerWithCode: (
+    email: string,
+    password: string,
+    username: string,
+    invitationid: string
   ) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
@@ -76,6 +83,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("token", data.token);
   };
 
+  const registerWithCode = async (
+    email: string,
+    password: string,
+    username: string,
+    invitationid: string
+  ) => {
+    const data = await apiRegisterWithCode({
+      email,
+      password,
+      username,
+      invitationid,
+    });
+    setUser(data.user);
+    setToken(data.token);
+    localStorage.setItem("token", data.token);
+  };
+
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -89,6 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         token,
         login,
         register,
+        registerWithCode,
         logout,
         isAuthenticated: !!user,
         isLoading,

@@ -27,7 +27,7 @@ router.get("/event/:id", async (req, res) => {
 
     res.json({ item: result.rows[0] });
   } catch (error) {
-    console.error("Errore query:", error);
+    console.error("query error:", error);
     res.status(500).json({ error: "server error" });
   }
 });

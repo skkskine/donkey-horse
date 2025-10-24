@@ -1,9 +1,12 @@
-import type { LoginCredentials, RegisterData } from "./../types/auth";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import type {
+  LoginCredentials,
+  RegisterData,
+  RegisterWithCodeData,
+} from "./../types/auth";
+import { authenticatedFetch, notAuthenticatedFetch } from "./methods";
 
 export async function login(credentials: LoginCredentials) {
-  const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+  const response = await notAuthenticatedFetch(`auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
@@ -18,7 +21,22 @@ export async function login(credentials: LoginCredentials) {
 }
 
 export async function register(data: RegisterData) {
-  const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+  const response = await authenticatedFetch(`auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || "regstration error");
+  }
+
+  return response.json();
+}
+
+export async function registerWithCode(data: RegisterWithCodeData) {
+  const response = await notAuthenticatedFetch(`auth/register-with-code`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -33,7 +51,7 @@ export async function register(data: RegisterData) {
 }
 
 export async function getCurrentUser(token: string) {
-  const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+  const response = await authenticatedFetch(`auth/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
