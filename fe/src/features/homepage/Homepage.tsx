@@ -6,7 +6,7 @@ export default function Homepage() {
   const { data } = useQuery({ queryKey: ["getEvents"], queryFn: getEvents });
 
   const events = (data?.items || []).map((event) => (
-    <ListItem event={event}></ListItem>
+    <ListItem key={event.id} event={event}></ListItem>
   ));
 
   return (

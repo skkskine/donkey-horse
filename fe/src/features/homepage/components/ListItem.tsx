@@ -5,9 +5,9 @@ interface Prop {
   event: EventData;
 }
 
-export default function ListIteme({ event }: Prop) {
+export default function ListItem({ event }: Prop) {
   return (
-    <div key={event.id} className="flex">
+    <div className="sm:flex mb-2 sm:mb-0">
       <Link to={"/edit-event/" + event.id} className="mr-2 underline">
         [edit]
       </Link>
@@ -15,9 +15,9 @@ export default function ListIteme({ event }: Prop) {
         <span className="text-orange-300 italic">
           {new Date(event.eventdate).toLocaleDateString("it-IT")}
         </span>
-        <span className="text-blue-600">{" ---> "}</span>
+        <span className="text-blue-600 hidden sm:inline">{" ---> "}</span>
       </div>
-      <div className="pl-1.5">
+      <div className="sm:pl-1.5">
         <span className="text-yellow-300"> {event.name}</span>{" "}
         <span className="text-green-500">@</span>{" "}
         {event.link ? (

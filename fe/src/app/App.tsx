@@ -34,7 +34,7 @@ function App() {
             add event
           </NavLink>
         </nav>
-        <div className="max-w-xl w-full mx-auto">
+        <div className="max-w-xl w-full mx-auto px-4">
           <pre>{art}</pre>
           <Outlet />
         </div>
