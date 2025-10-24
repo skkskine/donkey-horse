@@ -12,11 +12,11 @@ export default function HandleEvent({ type }: Prop) {
   const initialValue = { name: "", venue: "", eventdate: "", link: "" };
 
   const [formData, setFormData] = useState<Event>(initialValue);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { id } = useParams();
 
   // edit mode
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["getEvent", id],
     queryFn: () => getEvent(id || ""),
     enabled: type === "edit" && !!id,
@@ -24,8 +24,8 @@ export default function HandleEvent({ type }: Prop) {
 
   const editMutation = useMutation({
     mutationFn: updateEvent,
-    onSuccess: () => setIsLoading(false),
-    onError: () => setIsLoading(false),
+    onSuccess: () => setIsSubmitting(false),
+    onError: () => setIsSubmitting(false),
   });
 
   // set the form values with the current event
@@ -42,14 +42,14 @@ export default function HandleEvent({ type }: Prop) {
 
       setFormData(event);
     }
-  }, [data, id]);
+  }, [data]);
   // ----
 
   // add mode
   const addMutation = useMutation({
     mutationFn: addEvent,
-    onSuccess: () => setIsLoading(false),
-    onError: () => setIsLoading(false),
+    onSuccess: () => setIsSubmitting(false),
+    onError: () => setIsSubmitting(false),
   });
   // ----
 
@@ -65,7 +65,7 @@ export default function HandleEvent({ type }: Prop) {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    setIsLoading(true);
+    setIsSubmitting(true);
 
     const dataToSend = {
       ...formData,
@@ -96,7 +96,7 @@ export default function HandleEvent({ type }: Prop) {
           placeholder="name"
           required
           value={formData.name}
-          disabled={isLoading}
+          disabled={isSubmitting || isLoading}
           onChange={handleChange}
         ></input>
         <input
@@ -104,7 +104,7 @@ export default function HandleEvent({ type }: Prop) {
           placeholder="venue"
           required
           value={formData.venue}
-          disabled={isLoading}
+          disabled={isSubmitting || isLoading}
           onChange={handleChange}
         ></input>
         <input
@@ -114,20 +114,20 @@ export default function HandleEvent({ type }: Prop) {
           className="w-full"
           required
           value={formData.eventdate}
-          disabled={isLoading}
+          disabled={isSubmitting || isLoading}
           onChange={handleChange}
         ></input>
         <input
           name="link"
           placeholder="link"
           value={formData.link}
-          disabled={isLoading}
+          disabled={isSubmitting || isLoading}
           onChange={handleChange}
         ></input>
         <button
           type="submit"
           className="border p-2 rounded-md mt-3 hover:bg-white hover:text-black hover:cursor-pointer"
-          disabled={isLoading}
+          disabled={isSubmitting || isLoading}
         >
           {type} event
         </button>
