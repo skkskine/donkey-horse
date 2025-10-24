@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getEvents } from "../../api/api";
+import { Link } from "react-router-dom";
 
 export default function Homepage() {
   const { data } = useQuery({ queryKey: ["getEvents"], queryFn: getEvents });
@@ -7,6 +8,9 @@ export default function Homepage() {
   const events = (data?.items || []).map((event) => {
     return (
       <div key={event.id} className="flex">
+        <Link to={"/edit-event/" + event.id} className="mr-2 underline">
+          [edit]
+        </Link>
         <div className="shrink-0">
           <span className="text-orange-300 italic">
             {new Date(event.eventdate).toLocaleDateString("it-IT")}
@@ -37,10 +41,10 @@ export default function Homepage() {
       <p className="uppercase mb-3 text-red-700 italic text-xl">
         i-oooooh, i-oooooooh!!!!!
       </p>
-      <p className="text-sm mb-3">
+      <p className="text-sm mb-4">
         donkey horse doesnt understand you
         <br />
-        atm in alpha stage, if you want to add your events sniff{" "}
+        atm in alpha, if you want to add your events sniff{" "}
         <a href="mailto:gianmaria@tuta.com" className="underline">
           here
         </a>

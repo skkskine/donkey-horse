@@ -14,6 +14,44 @@ router.get("/events", async (req, res) => {
   }
 });
 
+router.get("/event/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await db.query("SELECT * FROM events WHERE id = $1", [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Evento non trovato" });
+    }
+
+    res.json({ item: result.rows[0] });
+  } catch (error) {
+    console.error("Errore query:", error);
+    res.status(500).json({ error: "Errore server" });
+  }
+});
+
+router.put("/event/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, venue, eventdate, link } = req.body;
+
+    const result = await db.query(
+      "UPDATE events SET name = $1, venue = $2, eventdate = $3, link = $4 WHERE id = $5 RETURNING *",
+      [name, venue, eventdate, link, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Evento non trovato" });
+    }
+
+    res.json({ item: result.rows[0] });
+  } catch (error) {
+    console.error("Errore query:", error);
+    res.status(500).json({ error: "Errore server" });
+  }
+});
+
 router.post("/events", async (req, res) => {
   try {
     const { name, venue, eventdate, link } = req.body;

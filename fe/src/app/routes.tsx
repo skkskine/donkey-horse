@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Homepage from "./../features/homepage/Homepage";
-import AddEvent from "./../features/add-event/AddEvent";
+import HandleEvent from "../features/handle-event/HandleEvent";
 import App from "./App";
 
 export const router = createBrowserRouter([
@@ -9,7 +9,8 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       { path: "/", element: <Homepage /> },
-      { path: "/add-event", element: <AddEvent /> },
+      { path: "/add-event", element: <HandleEvent type="add" /> },
+      { path: "/edit-event/:id", element: <HandleEvent type="edit" /> },
     ],
   },
 ]);

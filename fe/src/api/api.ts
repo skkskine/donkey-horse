@@ -1,4 +1,4 @@
-import type { Event } from "../../types/events";
+import type { Event, EventData } from "../../types/events";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -14,14 +14,40 @@ async function post(url: string, body: unknown) {
   });
 }
 
+async function put(url: string, body: unknown) {
+  return await fetch(`${API_BASE_URL}/api/${url}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}
+
 // API
 
-export const getEvents = async (): Promise<{ items: Event[] }> => {
+export const getEvents = async (): Promise<{ items: EventData[] }> => {
   const res = await get("events");
+  return res.json();
+};
+
+export const getEvent = async (
+  id: string
+): Promise<{ item: EventData | null }> => {
+  const res = await get(`event/${id}`);
   return res.json();
 };
 
 export const addEvent = async (event: Event): Promise<Event> => {
   const res = await post("events", event);
+  return res.json();
+};
+
+export const updateEvent = async ({
+  id,
+  event,
+}: {
+  id: string;
+  event: Event;
+}): Promise<{ item: EventData }> => {
+  const res = await put(`event/${id}`, event);
   return res.json();
 };
