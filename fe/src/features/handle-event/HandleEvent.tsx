@@ -27,6 +27,7 @@ export default function HandleEvent({ type }: Prop) {
     mutationFn: updateEvent,
     onSuccess: () => {
       setIsSubmitting(false);
+      setFormData(initialValue);
       navigate("/");
     },
     onError: () => setIsSubmitting(false),
@@ -36,6 +37,7 @@ export default function HandleEvent({ type }: Prop) {
     mutationFn: deleteEvent,
     onSuccess: () => {
       setIsSubmitting(false);
+      setFormData(initialValue);
       navigate("/");
     },
     onError: () => setIsSubmitting(false),
@@ -61,7 +63,10 @@ export default function HandleEvent({ type }: Prop) {
   // add mode
   const addMutation = useMutation({
     mutationFn: addEvent,
-    onSuccess: () => setIsSubmitting(false),
+    onSuccess: () => {
+      setFormData(initialValue);
+      navigate("/");
+    },
     onError: () => setIsSubmitting(false),
   });
   // ----
@@ -92,8 +97,6 @@ export default function HandleEvent({ type }: Prop) {
     if (type === "edit" && !!id) {
       editMutation.mutate({ id, event: dataToSend });
     }
-
-    setFormData(initialValue);
   }
 
   function handleDelete(e: React.FormEvent<HTMLFormElement>) {
@@ -154,7 +157,7 @@ export default function HandleEvent({ type }: Prop) {
         {type === "edit" && (
           <button
             className="border p-2 rounded-md border-red-400 text-red-400 mt-1 hover:cursor-pointer hover:bg-red-500 hover:text-white"
-            onClick={handleDelete}
+            onClick={() => handleDelete}
           >
             delete event
           </button>
