@@ -48,7 +48,7 @@ export function Register() {
       setError(err instanceof Error ? err.message : "registration error");
     } finally {
       setIsLoading(false);
-      //navigate("/login");
+      navigate("/login");
     }
   };
 

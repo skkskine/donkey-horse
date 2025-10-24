@@ -107,9 +107,8 @@ export default function HandleEvent({ type }: Prop) {
     }
   }
 
-  function handleDelete(e: React.FormEvent<HTMLFormElement>) {
+  function handleDelete(e: React.FormEvent<HTMLButtonElement>) {
     e.preventDefault();
-    e.stopPropagation();
     if (id) {
       deleteMutation.mutate({ id });
     }
@@ -167,7 +166,7 @@ export default function HandleEvent({ type }: Prop) {
           {type} event
         </Button>
         {type === "edit" && (
-          <Button styleType="danger" onClick={() => handleDelete}>
+          <Button styleType="danger" onClick={handleDelete}>
             delete event
           </Button>
         )}
