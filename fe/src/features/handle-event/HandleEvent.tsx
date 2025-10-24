@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { addEvent, getEvent, updateEvent } from "../../api/api";
+import { addEvent, getEvent, updateEvent } from "../../api/events";
 import { useEffect, useState } from "react";
-import type { Event } from "../../../types/events";
+import type { Event } from "../../types/events";
 import { useParams } from "react-router-dom";
 
 interface Prop {

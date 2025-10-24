@@ -12,9 +12,19 @@ async function ensureTables(pool) {
       )
     `);
 
-    console.log("✅ Tabelle del database pronte");
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        username VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    console.log("✅ db tables are ready");
   } catch (error) {
-    console.error("❌ Errore setup tabelle:", error);
+    console.error("❌ error creating db tables:", error);
   }
 }
 

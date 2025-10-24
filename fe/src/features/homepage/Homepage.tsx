@@ -1,12 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { getEvents } from "../../api/api";
+import { getEvents } from "../../api/events";
 import ListItem from "./components/ListItem";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Homepage() {
+  const { isAuthenticated } = useAuth();
   const { data } = useQuery({ queryKey: ["getEvents"], queryFn: getEvents });
 
   const events = (data?.items || []).map((event) => (
-    <ListItem key={event.id} event={event}></ListItem>
+    <ListItem
+      key={event.id}
+      isAuthenticated={isAuthenticated}
+      event={event}
+    ></ListItem>
   ));
 
   return (

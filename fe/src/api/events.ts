@@ -1,4 +1,4 @@
-import type { Event, EventData } from "../../types/events";
+import type { Event, EventData } from "../types/events";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -20,6 +20,34 @@ async function put(url: string, body: unknown) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
+}
+
+async function authenticatedFetch(endpoint: string, options: RequestInit = {}) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Non autenticato");
+  }
+
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      ...options.headers,
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      // Token scaduto, fai logout
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+    throw new Error(`Errore: ${response.statusText}`);
+  }
+
+  return response.json();
 }
 
 // API

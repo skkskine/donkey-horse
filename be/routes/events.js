@@ -1,6 +1,7 @@
 const express = require("express");
 const db = require("../db/database");
 const router = express.Router();
+const authMiddleware = require("../middlewares/auth-middleware");
 
 router.get("/events", async (req, res) => {
   try {
@@ -14,7 +15,7 @@ router.get("/events", async (req, res) => {
   }
 });
 
-router.get("/event/:id", async (req, res) => {
+router.get("/event/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -31,7 +32,7 @@ router.get("/event/:id", async (req, res) => {
   }
 });
 
-router.put("/event/:id", async (req, res) => {
+router.put("/event/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
     const { name, venue, eventdate, link } = req.body;
@@ -52,7 +53,7 @@ router.put("/event/:id", async (req, res) => {
   }
 });
 
-router.post("/events", async (req, res) => {
+router.post("/events", authMiddleware, async (req, res) => {
   try {
     const { name, venue, eventdate, link } = req.body;
 
