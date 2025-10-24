@@ -10,7 +10,13 @@ interface Prop {
 }
 
 export default function HandleEvent({ type }: Prop) {
-  const initialValue = { name: "", venue: "", eventdate: "", link: "" };
+  const initialValue = {
+    name: "",
+    venue: "",
+    eventdate: "",
+    link: "",
+    city: "",
+  };
 
   const [formData, setFormData] = useState<Event>(initialValue);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -53,7 +59,8 @@ export default function HandleEvent({ type }: Prop) {
           .toISOString()
           .split("T")[0] as unknown as string,
         venue: data.item.venue,
-        link: data.item.link,
+        link: data.item.link || "",
+        city: data.item.city || "",
       };
 
       setFormData(event);
@@ -102,6 +109,7 @@ export default function HandleEvent({ type }: Prop) {
 
   function handleDelete(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    e.stopPropagation();
     if (id) {
       deleteMutation.mutate({ id });
     }
@@ -117,7 +125,7 @@ export default function HandleEvent({ type }: Prop) {
       >
         <input
           name="name"
-          placeholder="name"
+          placeholder="name*"
           required
           value={formData.name}
           disabled={isSubmitting}
@@ -125,7 +133,7 @@ export default function HandleEvent({ type }: Prop) {
         ></input>
         <input
           name="venue"
-          placeholder="venue"
+          placeholder="venue*"
           required
           value={formData.venue}
           disabled={isSubmitting}
@@ -133,11 +141,18 @@ export default function HandleEvent({ type }: Prop) {
         ></input>
         <input
           name="eventdate"
-          placeholder="event date"
+          placeholder="event date*"
           type="date"
           className="w-full"
           required
           value={formData.eventdate}
+          disabled={isSubmitting}
+          onChange={handleChange}
+        ></input>
+        <input
+          name="city"
+          placeholder="city"
+          value={formData.city}
           disabled={isSubmitting}
           onChange={handleChange}
         ></input>

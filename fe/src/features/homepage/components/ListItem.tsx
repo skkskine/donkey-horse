@@ -21,7 +21,7 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
         <span className="text-blue-600 hidden sm:inline">{" ---> "}</span>
       </div>
       <div className="sm:pl-1.5">
-        <span className="text-yellow-300"> {event.name}</span>{" "}
+        <span className="text-yellow-300"> {event.name.toLowerCase()}</span>{" "}
         <span className="text-green-500">@</span>{" "}
         {event.link ? (
           <a
@@ -29,10 +29,18 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
             target="_blank"
             className="underline text-yellow-300"
           >
-            {event.venue}
+            {event.venue.toLowerCase()}{" "}
+            {event.city && (
+              <span className="italic text-green-300">({event.city})</span>
+            )}
           </a>
         ) : (
-          <span className="text-yellow-300">{event.venue}</span>
+          <span className="text-yellow-300">
+            {event.venue.toLowerCase()}{" "}
+            {event.city && (
+              <span className="italic text-sm">&#60;{event.city}&#62;</span>
+            )}
+          </span>
         )}
       </div>
     </div>

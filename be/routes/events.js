@@ -35,11 +35,11 @@ router.get("/event/:id", async (req, res) => {
 router.put("/event/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, venue, eventdate, link } = req.body;
+    const { name, venue, eventdate, link, city } = req.body;
 
     const result = await db.query(
-      "UPDATE events SET name = $1, venue = $2, eventdate = $3, link = $4 WHERE id = $5 RETURNING *",
-      [name, venue, eventdate, link, id]
+      "UPDATE events SET name = $1, venue = $2, eventdate = $3, link = $4, city = $5 WHERE id = $6 RETURNING *",
+      [name, venue, eventdate, link, city, id]
     );
 
     if (result.rows.length === 0) {
@@ -55,11 +55,11 @@ router.put("/event/:id", authMiddleware, async (req, res) => {
 
 router.post("/events", authMiddleware, async (req, res) => {
   try {
-    const { name, venue, eventdate, link } = req.body;
+    const { name, venue, eventdate, link, city } = req.body;
 
     const result = await db.query(
-      "INSERT INTO events (name, venue, eventdate, link) VALUES ($1, $2, $3, $4) RETURNING *",
-      [name, venue, eventdate, link]
+      "INSERT INTO events (name, venue, eventdate, link, city) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [name, venue, eventdate, link, city]
     );
 
     res.status(201).json({ item: result.rows[0] });

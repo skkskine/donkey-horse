@@ -5,6 +5,7 @@ export interface Event {
   venue: string;
   eventdate: string;
   link?: string;
+  city?: string;
 }
 
 export type EventData = Event & BaseEntity;
