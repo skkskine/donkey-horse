@@ -16,7 +16,7 @@ export default function HandleEvent({ type }: Prop) {
   const { id } = useParams();
 
   // edit mode
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["getEvent", id],
     queryFn: () => getEvent(id || ""),
     enabled: type === "edit" && !!id,
@@ -96,7 +96,7 @@ export default function HandleEvent({ type }: Prop) {
           placeholder="name"
           required
           value={formData.name}
-          disabled={isSubmitting || isLoading}
+          disabled={isSubmitting}
           onChange={handleChange}
         ></input>
         <input
@@ -104,7 +104,7 @@ export default function HandleEvent({ type }: Prop) {
           placeholder="venue"
           required
           value={formData.venue}
-          disabled={isSubmitting || isLoading}
+          disabled={isSubmitting}
           onChange={handleChange}
         ></input>
         <input
@@ -114,20 +114,20 @@ export default function HandleEvent({ type }: Prop) {
           className="w-full"
           required
           value={formData.eventdate}
-          disabled={isSubmitting || isLoading}
+          disabled={isSubmitting}
           onChange={handleChange}
         ></input>
         <input
           name="link"
           placeholder="link"
           value={formData.link}
-          disabled={isSubmitting || isLoading}
+          disabled={isSubmitting}
           onChange={handleChange}
         ></input>
         <button
           type="submit"
           className="border p-2 rounded-md mt-3 hover:bg-white hover:text-black hover:cursor-pointer"
-          disabled={isSubmitting || isLoading}
+          disabled={isSubmitting}
         >
           {type} event
         </button>

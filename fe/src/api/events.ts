@@ -2,34 +2,35 @@ import type { Event, EventData } from "../types/events";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-async function get(url: string) {
-  return await fetch(`${API_BASE_URL}/api/${url}`);
-}
+// METHODS
 
-async function post(url: string, body: unknown) {
-  return await fetch(`${API_BASE_URL}/api/${url}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+async function notAuthenticatedFetch(
+  endpoint: string,
+  options: RequestInit = {}
+) {
+  const response = await fetch(`${API_BASE_URL}/api/${endpoint}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
   });
-}
 
-async function put(url: string, body: unknown) {
-  return await fetch(`${API_BASE_URL}/api/${url}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  if (!response.ok) {
+    throw new Error(`Errore: ${response.statusText}`);
+  }
+
+  return response;
 }
 
 async function authenticatedFetch(endpoint: string, options: RequestInit = {}) {
   const token = localStorage.getItem("token");
 
   if (!token) {
-    throw new Error("Non autenticato");
+    throw new Error("you are not authenticated");
   }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const response = await fetch(`${API_BASE_URL}/api/${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -47,25 +48,28 @@ async function authenticatedFetch(endpoint: string, options: RequestInit = {}) {
     throw new Error(`Errore: ${response.statusText}`);
   }
 
-  return response.json();
+  return response;
 }
 
 // API
 
 export const getEvents = async (): Promise<{ items: EventData[] }> => {
-  const res = await get("events");
+  const res = await notAuthenticatedFetch("events");
   return res.json();
 };
 
 export const getEvent = async (
   id: string
 ): Promise<{ item: EventData | null }> => {
-  const res = await get(`event/${id}`);
+  const res = await notAuthenticatedFetch(`event/${id}`);
   return res.json();
 };
 
 export const addEvent = async (event: Event): Promise<Event> => {
-  const res = await post("events", event);
+  const res = await authenticatedFetch("events", {
+    body: JSON.stringify(event),
+    method: "POST",
+  });
   return res.json();
 };
 
@@ -76,6 +80,9 @@ export const updateEvent = async ({
   id: string;
   event: Event;
 }): Promise<{ item: EventData }> => {
-  const res = await put(`event/${id}`, event);
+  const res = await authenticatedFetch(`event/${id}`, {
+    body: JSON.stringify(event),
+    method: "PUT",
+  });
   return res.json();
 };
