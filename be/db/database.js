@@ -1,22 +1,40 @@
 const { Pool } = require("pg");
-require("dotenv").config();
 const { ensureTables } = require("./initDb");
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
-ensureTables(pool);
+if (!process.env.DATABASE_URL) {
+  console.error("❌ DATABASE_URL non definito!");
+  process.exit(1);
+}
 
-pool.on("connect", () => {
-  console.log("✅ Connesso al database PostgreSQL");
-});
+console.log("✅ DATABASE_URL configurato");
 
-pool.on("error", (err) => {
-  console.error("❌ Errore database:", err);
-});
+try {
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+  });
 
-module.exports = {
-  query: (text, params) => pool.query(text, params),
-  pool,
-};
+  pool.on("connect", () => {
+    console.log("✅ Connesso al database PostgreSQL");
+  });
+
+  pool.on("error", (err) => {
+    console.error("❌ Errore database:", err);
+  });
+
+  setTimeout(() => {
+    ensureTables(pool);
+  }, 2000);
+
+  module.exports = {
+    query: (text, params) => pool.query(text, params),
+    pool,
+  };
+} catch (error) {
+  console.error("❌ Errore inizializzazione Pool:", error.message);
+  console.error("Stack:", error.stack);
+  process.exit(1);
+}

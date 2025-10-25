@@ -1,7 +1,9 @@
-// be/src/index.js
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
+
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
 const authRoutes = require("./routes/auth");
 const eventsRouter = require("./routes/events");
@@ -10,7 +12,7 @@ const inviteRouter = require("./routes/invite");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);

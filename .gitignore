@@ -24,3 +24,7 @@ fe/*.ntvs*
 fe/*.njsproj
 fe/*.sln
 fe/*.sw?
+
+.env
+fe/.env
+be/.env
