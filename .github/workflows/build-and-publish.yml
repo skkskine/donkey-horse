@@ -9,6 +9,29 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v5
 
+      - name: Get version from Git tag
+        id: get_version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "Version: $VERSION"
+          echo "::set-output name=version::$VERSION"
+
+      - name: Update frontend version
+        run: |
+          cd fe
+          npm version ${{ steps.get_version.outputs.version }} --no-git-tag-version
+
+      - name: Update backend version
+        run: |
+          cd be
+          npm version ${{ steps.get_version.outputs.version }} --no-git-tag-version
+
+      - name: Commit updated versions to Git
+        run: |
+          git add fe/package.json be/package.json
+          git commit -m "Update frontend and backend versions to ${{ steps.get_version.outputs.version }}"
+          git push
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -45,3 +68,19 @@ jobs:
           tags: |
             gnmrschnzs/donkeyhorse-be:${{ steps.extract_tag.outputs.tag }}
             gnmrschnzs/donkeyhorse-be:latest
+
+      - name: Update frontend version
+        run: |
+          cd fe
+          npm version patch -m "Bump frontend version to %s"
+
+      - name: Update backend version
+        run: |
+          cd be
+          npm version patch -m "Bump backend version to %s"
+
+      - name: Commit updated versions to Git
+        run: |
+          git add fe/package.json be/package.json
+          git commit -m "Update frontend and backend versions"
+          git push
