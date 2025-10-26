@@ -26,6 +26,11 @@ jobs:
           cd be
           npm version ${{ steps.get_version.outputs.version }} --no-git-tag-version
 
+      - name: Set Git author
+        run: |
+          git config --global user.name "github action"
+          git config --global user.email "github-actions@github.com"
+
       - name: Commit updated versions to Git
         run: |
           git add fe/package.json be/package.json
