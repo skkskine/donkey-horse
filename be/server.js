@@ -12,7 +12,7 @@ const inviteRouter = require("./routes/invite");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: process.env.VITE_API_BASE_URL }));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);

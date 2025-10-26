@@ -37,6 +37,12 @@ function App() {
       >
         invite
       </NavLink>
+      <NavLink
+        to="/account"
+        className={({ isActive }) => highlightCurrentPage(isActive)}
+      >
+        account
+      </NavLink>
     </nav>
   );
 

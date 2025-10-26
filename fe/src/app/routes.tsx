@@ -6,6 +6,7 @@ import { Login } from "../features/admin/Login";
 import { Register } from "../features/admin/Register";
 import { ProtectedRoute } from "../features/admin/ProtectedRoute";
 import Invite from "../features/invite/Invite";
+import Account from "../features/account/Account";
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Invite />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/account",
+        element: (
+          <ProtectedRoute>
+            <Account />
           </ProtectedRoute>
         ),
       },
