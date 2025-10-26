@@ -28,5 +28,3 @@ fe/*.sw?
 .env
 fe/.env
 be/.env
-
-build-images.sh
