@@ -44,7 +44,7 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
         )}
         <span className="text-sm italic text-yellow-200">
           {" "}
-          ({event.eventtime && formatTime(event.eventtime)})
+          {event.eventtime && `(${formatTime(event.eventtime)})`}
         </span>
         {event.city && (
           <span className="italic text-green-300 text-sm">
