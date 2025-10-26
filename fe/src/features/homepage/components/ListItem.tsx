@@ -6,6 +6,11 @@ interface Prop {
   isAuthenticated: boolean;
 }
 
+function formatTime(time: string) {
+  const timeWithoutTimezone = time.split("+")[0];
+  return timeWithoutTimezone.substring(0, 5);
+}
+
 export default function ListItem({ isAuthenticated, event }: Prop) {
   return (
     <div className="sm:flex mb-2 text-center sm:text-left">
@@ -19,7 +24,8 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
           {new Date(event.eventdate).toLocaleDateString("it-IT", {
             day: "2-digit",
             month: "2-digit",
-          })}
+          })}{" "}
+          {event.eventtime && formatTime(event.eventtime)}
         </span>
         <span className="text-blue-600 hidden sm:inline">{" ---> "}</span>
       </div>

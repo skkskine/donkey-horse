@@ -149,6 +149,15 @@ export default function HandleEvent({ type }: Prop) {
           onChange={handleChange}
         ></input>
         <input
+          name="eventtime"
+          placeholder="00:00"
+          step="60"
+          type="time"
+          value={formData.eventtime}
+          disabled={isSubmitting}
+          onChange={handleChange}
+        ></input>
+        <input
           name="city"
           placeholder="city"
           value={formData.city}

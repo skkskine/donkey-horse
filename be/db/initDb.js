@@ -8,6 +8,7 @@ async function ensureTables(pool) {
         name VARCHAR(255) NOT NULL,
         venue TEXT NOT NULL,
         eventdate DATE NOT NULL,
+        eventtime TIME,
         link TEXT,
         city TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
