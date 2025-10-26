@@ -29,17 +29,15 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
             target="_blank"
             className="underline text-yellow-300"
           >
-            {event.venue.toLowerCase()}{" "}
-            {event.city && (
-              <span className="italic text-green-300">({event.city})</span>
-            )}
+            {event.venue.toLowerCase()}
           </a>
         ) : (
-          <span className="text-yellow-300">
-            {event.venue.toLowerCase()}{" "}
-            {event.city && (
-              <span className="italic text-sm">&#60;{event.city}&#62;</span>
-            )}
+          <span className="text-yellow-300">{event.venue.toLowerCase()} </span>
+        )}
+        {event.city && (
+          <span className="italic text-green-300 text-sm">
+            {" "}
+            &#60;{event.city}&#62;
           </span>
         )}
       </div>
