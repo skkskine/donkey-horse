@@ -16,7 +16,10 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
       )}
       <div className="shrink-0">
         <span className="text-orange-300 italic">
-          {new Date(event.eventdate).toLocaleDateString("it-IT")}
+          {new Date(event.eventdate).toLocaleDateString("it-IT", {
+            day: "2-digit",
+            month: "2-digit",
+          })}
         </span>
         <span className="text-blue-600 hidden sm:inline">{" ---> "}</span>
       </div>
