@@ -23,7 +23,7 @@ export default function Homepage() {
       <p className="text-sm mb-4">
         donkey horse doesnt understand you
         <br />
-        atm in alpha, if you want to add your events sniff{" "}
+        atm in alpha, if you want to add your events look{" "}
         <a href="mailto:gianmaria@tuta.com" className="underline">
           here
         </a>

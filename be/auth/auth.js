@@ -3,20 +3,22 @@ const jwt = require("jsonwebtoken");
 const db = require("../db/database");
 
 async function registerWithCode(req, res) {
-  const { invitationId } = req.body;
+  const { invitationid } = req.body;
 
   const result = await db.query(
-    "SELECT * FROM invitelinks WHERE invitationid = $1",
-    [invitationId]
+    "SELECT * FROM invitelinks WHERE invitationid = $1 AND isvalid = TRUE",
+    [invitationid]
   );
 
   // if the code is valid proceed with regstration
-  if (result.rows.length === 0) {
-    register(req, res);
+  if (result.rows.length > 0) {
+    register(req, res, invitationid);
+  } else {
+    return res.status(400).json({ error: "the code is not valid" });
   }
 }
 
-async function register(req, res) {
+async function register(req, res, invitationid = null) {
   try {
     const { email, password, username } = req.body;
 
@@ -53,6 +55,15 @@ async function register(req, res) {
       [email, passwordHash, username]
     );
     const user = result.rows[0];
+
+    // invalidate the registration code if needed
+    if (invitationid) {
+      console.log("REGISTRATION ID", invitationid);
+      await db.query(
+        "UPDATE invitelinks SET isvalid = $1 WHERE invitationid = $2 RETURNING *",
+        ["FALSE", invitationid]
+      );
+    }
 
     const token = jwt.sign(
       { userId: user.id, email: user.email, username: user.username },

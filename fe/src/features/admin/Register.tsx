@@ -18,7 +18,7 @@ export function Register() {
   const { isAuthenticated } = useAuth();
 
   const { data } = useQuery({
-    queryKey: ["getEvent", invitationid],
+    queryKey: ["getInvitationId", invitationid],
     queryFn: () =>
       invitationid ? checkIfInvitationidIsCorrect(invitationid) : undefined,
     enabled: !!invitationid,
@@ -41,9 +41,12 @@ export function Register() {
     setIsLoading(true);
 
     try {
-      isAuthenticated
-        ? await register(email, password, username)
-        : await registerWithCode(email, password, username, invitationid || "");
+      if (isAuthenticated) {
+        await register(email, password, username);
+      }
+      if (!isAuthenticated && invitationid) {
+        await registerWithCode(email, password, username, invitationid);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "registration error");
     } finally {

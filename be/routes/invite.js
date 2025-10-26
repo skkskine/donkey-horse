@@ -9,7 +9,7 @@ router.get("/invite/:invitationId", async (req, res) => {
     const { invitationId } = req.params;
 
     const result = await db.query(
-      "SELECT * FROM invitelinks WHERE invitationid = $1",
+      "SELECT * FROM invitelinks WHERE invitationid = $1 AND isvalid = true",
       [invitationId]
     );
 
@@ -29,8 +29,8 @@ router.post("/invite", authMiddleware, async (req, res) => {
     const invitationId = randomUUID();
 
     const result = await db.query(
-      "INSERT INTO invitelinks (invitationid) VALUES ($1) RETURNING *",
-      [invitationId]
+      "INSERT INTO invitelinks (invitationid, isvalid) VALUES ($1, $2) RETURNING *",
+      [invitationId, true]
     );
 
     res.status(201).json({ item: result.rows[0] });
