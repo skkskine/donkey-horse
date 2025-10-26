@@ -1,5 +1,6 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import Footer from "../components/Footer";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -48,11 +49,17 @@ function App() {
 
   return (
     <div className="min-h-screen bg-black text-white flex text-center items-center flex-col">
-      {isAuthenticated && navbar}
-      <div className="max-w-xl w-full mx-auto px-4">
-        <pre>{art}</pre>
-        <Outlet />
+      <div className="grow">
+        {isAuthenticated && navbar}
+        <main className="max-w-xl w-full mx-auto px-4">
+          <Link to="/">
+            <pre>{art}</pre>
+          </Link>
+          <Outlet />
+        </main>
       </div>
+
+      <Footer></Footer>
     </div>
   );
 }

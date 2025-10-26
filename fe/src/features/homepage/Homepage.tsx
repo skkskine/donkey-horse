@@ -20,14 +20,7 @@ export default function Homepage() {
       <p className="uppercase mb-3 text-red-700 italic text-xl">
         i-oooooh, i-oooooooh!!!!!
       </p>
-      <p className="text-sm mb-4">
-        donkey horse doesnt understand you
-        <br />
-        atm in alpha, if you want to add your events look{" "}
-        <a href="mailto:gianmaria@tuta.com" className="underline">
-          here
-        </a>
-      </p>
+      <p className="text-sm mb-4">donkey horse doesnt understand you</p>
       <div className="text-center">
         <div className="text-left inline-block">{events}</div>
       </div>
