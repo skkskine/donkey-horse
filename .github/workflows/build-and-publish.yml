@@ -35,7 +35,7 @@ jobs:
         run: |
           git add fe/package.json be/package.json
           git commit -m "Update frontend and backend versions to ${{ steps.get_version.outputs.version }}"
-          git push origin main
+          git push origin HEAD:main -f
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
