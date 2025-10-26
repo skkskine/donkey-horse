@@ -24,8 +24,7 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
           {new Date(event.eventdate).toLocaleDateString("it-IT", {
             day: "2-digit",
             month: "2-digit",
-          })}{" "}
-          {event.eventtime && formatTime(event.eventtime)}
+          })}
         </span>
         <span className="text-blue-600 hidden sm:inline">{" ---> "}</span>
       </div>
@@ -41,8 +40,12 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
             {event.venue.toLowerCase()}
           </a>
         ) : (
-          <span className="text-yellow-300">{event.venue.toLowerCase()} </span>
+          <span className="text-yellow-300">{event.venue.toLowerCase()}</span>
         )}
+        <span className="text-sm italic text-yellow-200">
+          {" "}
+          ({event.eventtime && formatTime(event.eventtime)})
+        </span>
         {event.city && (
           <span className="italic text-green-300 text-sm">
             {" "}
