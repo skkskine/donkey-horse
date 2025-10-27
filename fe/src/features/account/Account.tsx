@@ -11,7 +11,7 @@ export default function Account() {
   return (
     <div className="text-sm">
       <p>hello {user?.username}</p>
-      <Button styleType="danger" className="mt-5" onClick={handleLogout}>
+      <Button styleType="danger" className="mt-4" onClick={handleLogout}>
         logout
       </Button>
     </div>
