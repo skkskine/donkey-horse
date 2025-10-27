@@ -2,4 +2,4 @@
 
 list events, shows, diy and local stuff happening aroud you
 
-see it online https://donkeyhorse.boo (focused on northen italy)
+see it online https://donkeyhorse.boo (mostly northen italy)
