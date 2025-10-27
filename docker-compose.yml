@@ -19,16 +19,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # Backend (lo aggiungeremo dopo)
-  # backend:
-  #   build: ./be
-  #   ...
-
-  # Frontend (lo aggiungeremo dopo)
-  # frontend:
-  #   build: ./fe
-  #   ...
-
 volumes:
   postgres_data:
     driver: local
