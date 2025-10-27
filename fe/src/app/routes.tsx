@@ -8,6 +8,7 @@ import { ProtectedRoute } from "../features/admin/ProtectedRoute";
 import Invite from "../features/invite/Invite";
 import Account from "../features/account/Account";
 import Contacts from "../features/contacts/Contacts";
+import NotFound from "../features/not-found/NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +62,7 @@ export const router = createBrowserRouter([
         path: "/contacts",
         element: <Contacts />,
       },
+      { path: "*", element: <NotFound></NotFound> },
     ],
   },
 ]);
