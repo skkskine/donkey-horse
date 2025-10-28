@@ -28,7 +28,7 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
         </span>
         <span className="text-blue-600 hidden sm:inline">{" ---> "}</span>
       </div>
-      <div className="sm:pl-1.5">
+      <div className="sm:pl-1.5 text-left">
         <span className="text-yellow-300"> {event.name.toLowerCase()}</span>{" "}
         <span className="text-green-500">@</span>{" "}
         {event.link ? (
