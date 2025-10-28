@@ -81,4 +81,4 @@ docker compose up -d
 
 check the backend container logs to get the default donkey horse user
 
-go to http://localhost/login (or http://<your-domain>/login) and then change the password from the account page
+go to http://localhost/login (or <your-domain>/login) and then change the password from the account page
