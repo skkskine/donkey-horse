@@ -33,14 +33,6 @@ jobs:
           jq '.version = "${{ steps.get_version.outputs.version }}"' package.json > package.json.tmp
           mv package.json.tmp package.json
 
-      - name: Commit and push version changes
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add package.json packages/fe/package.json packages/be/package.json
-          git commit -m "chore: bump version to ${{ steps.get_version.outputs.version }}"
-          git push origin HEAD:main
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -77,3 +69,11 @@ jobs:
           tags: |
             gnmrschnzs/donkeyhorse-be:${{ steps.extract_tag.outputs.tag }}
             gnmrschnzs/donkeyhorse-be:latest
+
+      - name: Commit and push version changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add package.json packages/fe/package.json packages/be/package.json
+          git commit -m "chore: bump version to ${{ steps.get_version.outputs.version }}"
+          git push origin HEAD:main
