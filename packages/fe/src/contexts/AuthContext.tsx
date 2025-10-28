@@ -11,6 +11,7 @@ import {
   register as apiRegister,
   registerWithCode as apiRegisterWithCode,
   getCurrentUser,
+  updatePassword as apiUpdatePassword,
 } from "../api/auth";
 
 type User = {
@@ -34,6 +35,7 @@ type AuthContextType = {
     username: string,
     invitationid: string
   ) => Promise<void>;
+  updatePassword: (password: string, username: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -100,6 +102,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("token", data.token);
   };
 
+  const updatePassword = async (password: string, username: string) => {
+    const data = await apiUpdatePassword({ password, username });
+    setUser(data.user);
+    setToken(data.token);
+    localStorage.setItem("token", data.token);
+  };
+
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -115,6 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         register,
         registerWithCode,
         logout,
+        updatePassword,
         isAuthenticated: !!user,
         isLoading,
       }}

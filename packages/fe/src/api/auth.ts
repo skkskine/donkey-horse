@@ -2,22 +2,27 @@ import type {
   LoginCredentials,
   RegisterData,
   RegisterWithCodeData,
+  UpdatePasswordData,
 } from "../types/auth";
 import { authenticatedFetch, notAuthenticatedFetch } from "./methods";
 
 export async function login(credentials: LoginCredentials) {
-  const response = await notAuthenticatedFetch(`auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(credentials),
-  });
+  try {
+    const response = await notAuthenticatedFetch(`auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
+    });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "login error");
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "login error");
+    }
+
+    return response.json();
+  } catch {
+    throw new Error("credentials are not valid");
   }
-
-  return response.json();
 }
 
 export async function register(data: RegisterData) {
@@ -45,6 +50,21 @@ export async function registerWithCode(data: RegisterWithCodeData) {
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || "regstration error");
+  }
+
+  return response.json();
+}
+
+export async function updatePassword(data: UpdatePasswordData) {
+  const response = await authenticatedFetch(`auth/update-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || "update password error");
   }
 
   return response.json();

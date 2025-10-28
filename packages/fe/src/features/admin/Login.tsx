@@ -18,11 +18,11 @@ export function Login() {
 
     try {
       await login(username, password);
+      navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "login error");
     } finally {
       setIsLoading(false);
-      navigate("/");
     }
   };
 
@@ -54,7 +54,7 @@ export function Login() {
       >
         {isLoading ? "loading..." : "login"}
       </button>
-      {error && <p>{error}</p>}
+      {error && <p className="text-xs mt-3">{error}</p>}
     </form>
   );
 }

@@ -12,3 +12,8 @@ export interface RegisterData {
 export interface RegisterWithCodeData extends RegisterData {
   invitationid: string;
 }
+
+export interface UpdatePasswordData {
+  username: string;
+  password: string;
+}

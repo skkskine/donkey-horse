@@ -147,4 +147,53 @@ async function getCurrentUser(req, res) {
   }
 }
 
-module.exports = { register, login, getCurrentUser, registerWithCode };
+async function updatePassword(req, res) {
+  try {
+    const { username, password } = req.body;
+
+    if (!password || !username) {
+      return res
+        .status(400)
+        .json({ error: "username and password and required" });
+    }
+
+    if (password.length < 8) {
+      return res
+        .status(400)
+        .json({ error: "the password should be at least 8 characters long" });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    const result = await db.query(
+      "UPDATE users SET password_hash = $1 WHERE username = $2 RETURNING id, username, email, created_at",
+      [passwordHash, username]
+    );
+
+    const user = result.rows[0];
+
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+    );
+
+    res.status(201).json({
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+      },
+      token,
+    });
+  } catch (error) {
+    return res.status(500).json({ error: "error updating your password" });
+  }
+}
+
+module.exports = {
+  register,
+  login,
+  getCurrentUser,
+  registerWithCode,
+  updatePassword,
+};
