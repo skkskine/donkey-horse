@@ -59,7 +59,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./packages/fe
-          file: ../packages/fe/Dockerfile
+          file: ./packages/fe/Dockerfile
           push: true
           tags: |
             gnmrschnzs/donkeyhorse-fe:${{ steps.extract_tag.outputs.tag }}
