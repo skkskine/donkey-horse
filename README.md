@@ -51,7 +51,7 @@ npm run dev
 
 check the backend logs to get the default donkey horse user
 
-go to http://localhost:<your-port>/login and then change the password from the account page
+go to http://localhost:your-port/login and then change the password from the account page
 
 ### method 2: docker compose
 
