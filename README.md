@@ -49,7 +49,9 @@ start both frontend and backend
 npm run dev
 ```
 
-check the backend logs to get the default donkey horse user (and change the password after the first login)
+check the backend logs to get the default donkey horse user
+
+go to http://localhost:<your-port>/login and then change the password from the account page
 
 ### method 2: docker compose
 
@@ -77,4 +79,6 @@ build and start the containers
 docker compose up -d
 ```
 
-check the backend container logs to get the default donkey horse user (and change the password after the first login)
+check the backend container logs to get the default donkey horse user
+
+go to http://localhost/login (or http://<your-domain>/login) and then change the password from the account page
