@@ -1,0 +1,30 @@
+{
+  "name": "donkey-horse",
+  "version": "0.0.7",
+  "description": "list events, shows, diy and local stuff happening aroud you",
+  "main": "index.js",
+  "scripts": {
+    "dev:fe": "npm run dev --workspace=frontend",
+    "dev:be": "npm run dev --workspace=backend",
+    "dev": "npm run dev:fe & npm run dev:be",
+    "build:fe": "npm run build --workspace=frontend",
+    "build:be": "npm run build --workspace=backend",
+    "build": "npm run build:fe && npm run build:be"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skkskine/donkey-horse.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/skkskine/donkey-horse/issues"
+  },
+  "homepage": "https://github.com/skkskine/donkey-horse#readme",
+  "workspaces": [
+    "packages/fe",
+    "packages/be"
+  ]
+}
