@@ -16,15 +16,20 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Versione estratta: $VERSION"
 
+      - name: Update root version
+        run: |
+          jq '.version = "${{ steps.get_version.outputs.version }}"' package.json > package.json.tmp
+          mv package.json.tmp package.json
+
       - name: Update frontend version
         run: |
-          cd fe
+          cd packages/fe
           jq '.version = "${{ steps.get_version.outputs.version }}"' package.json > package.json.tmp
           mv package.json.tmp package.json
 
       - name: Update backend version
         run: |
-          cd be
+          cd packages/be
           jq '.version = "${{ steps.get_version.outputs.version }}"' package.json > package.json.tmp
           mv package.json.tmp package.json
 
