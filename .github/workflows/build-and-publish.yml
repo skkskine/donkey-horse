@@ -53,8 +53,8 @@ jobs:
         id: push-frontend
         uses: docker/build-push-action@v5
         with:
-          context: ./fe
-          file: ./fe/Dockerfile
+          context: ./packages/fe
+          file: ../packages/fe/Dockerfile
           push: true
           tags: |
             gnmrschnzs/donkeyhorse-fe:${{ steps.extract_tag.outputs.tag }}
@@ -66,8 +66,8 @@ jobs:
         id: push-backend
         uses: docker/build-push-action@v5
         with:
-          context: ./be
-          file: ./be/Dockerfile
+          context: ./packages/be
+          file: ./packages/be/Dockerfile
           push: true
           tags: |
             gnmrschnzs/donkeyhorse-be:${{ steps.extract_tag.outputs.tag }}
