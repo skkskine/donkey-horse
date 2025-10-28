@@ -77,4 +77,4 @@ build and start the containers
 docker compose up -d
 ```
 
-check the backend container logs to get the default donkey horse user (and change
+check the backend container logs to get the default donkey horse user (and change the password after the first login)
