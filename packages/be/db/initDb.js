@@ -56,9 +56,13 @@ async function seedAdminUser(pool) {
     const adminUsername = "admin";
     const adminPassword = Math.random().toString(36).slice(2, 10);
 
-    console.log("admin password", adminPassword);
+    console.log("\n============================\n");
+    console.log("DATABASE CREDENTIALS");
+    console.log("CHANGE THE PASSWORD AFTER THE FIRST LOGIN");
     console.log("admin username", adminUsername);
+    console.log("admin password", adminPassword);
     console.log("admin email", adminEmail);
+    console.log("\n============================\n");
 
     const passwordHash = await bcrypt.hash(adminPassword, 10);
 
