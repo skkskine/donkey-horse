@@ -1,6 +1,6 @@
 {
   "name": "donkey-horse",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "description": "list events, shows, diy and local stuff happening aroud you",
   "main": "index.js",
   "scripts": {
