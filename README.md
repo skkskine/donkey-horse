@@ -8,7 +8,7 @@ see it online https://donkeyhorse.boo (mostly northen italy)
 
 ---
 
-### run project:
+### run the project:
 
 clone the repository
 
