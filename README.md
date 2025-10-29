@@ -13,7 +13,7 @@ see it online https://donkeyhorse.boo (mostly northen italy)
 clone the repository
 
 ```bash
-git clone https://github.com/yourusername/donkey-horse.git
+git clone https://github.com/skkskine/donkey-horse.git
 cd donkey-horse
 ```
 
