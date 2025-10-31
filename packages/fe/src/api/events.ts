@@ -1,8 +1,11 @@
 import type { Event, EventData } from "../types/events";
 import { authenticatedFetch, notAuthenticatedFetch } from "./methods";
 
-export const getEvents = async (): Promise<{ items: EventData[] }> => {
-  const res = await notAuthenticatedFetch("events");
+export const getEvents = async (
+  range: "full" | "next"
+): Promise<{ items: EventData[] }> => {
+  const path = range === "full" ? "events?range=full" : "events";
+  const res = await notAuthenticatedFetch(path);
   return res.json();
 };
 

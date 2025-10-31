@@ -5,8 +5,15 @@ const authMiddleware = require("../middlewares/auth-middleware");
 
 router.get("/events", async (req, res) => {
   try {
+    const { range } = req.query;
+
+    const nextEventsQuery =
+      "SELECT * FROM events WHERE eventdate >= CURRENT_DATE AND eventdate < CURRENT_DATE + INTERVAL '14 days' ORDER BY eventdate ASC, name ASC";
+    const allEventsQuery =
+      "SELECT * FROM events WHERE eventdate >= CURRENT_DATE ORDER BY eventdate ASC, name ASC";
+
     const result = await db.query(
-      "SELECT * FROM events WHERE eventdate >= CURRENT_DATE AND eventdate < CURRENT_DATE + INTERVAL '14 days' ORDER BY eventdate ASC, name ASC"
+      range === "full" ? allEventsQuery : nextEventsQuery
     );
     res.json({ items: result.rows });
   } catch (error) {

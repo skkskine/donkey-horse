@@ -5,7 +5,10 @@ import { useAuth } from "../../contexts/AuthContext";
 
 export default function Homepage() {
   const { isAuthenticated } = useAuth();
-  const { data } = useQuery({ queryKey: ["getEvents"], queryFn: getEvents });
+  const { data } = useQuery({
+    queryKey: ["getEvents"],
+    queryFn: () => getEvents(isAuthenticated ? "full" : "next"),
+  });
 
   const events = (data?.items || []).map((event) => (
     <ListItem
