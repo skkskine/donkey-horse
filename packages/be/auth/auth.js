@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../db/database");
+const { createHash, randomBytes } = require("crypto");
+const { sendPasswordResetEmail } = require("../services/email");
 
 async function registerWithCode(req, res) {
   const { invitationid } = req.body;
@@ -147,46 +149,104 @@ async function getCurrentUser(req, res) {
   }
 }
 
-async function updatePassword(req, res) {
+async function forgotPassword(req, res) {
   try {
-    const { username, password } = req.body;
+    const { email } = req.body;
 
-    if (!password || !username) {
-      return res
-        .status(400)
-        .json({ error: "username and password and required" });
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
     }
 
-    if (password.length < 8) {
-      return res
-        .status(400)
-        .json({ error: "the password should be at least 8 characters long" });
-    }
-
-    const passwordHash = await bcrypt.hash(password, 10);
     const result = await db.query(
-      "UPDATE users SET password_hash = $1 WHERE username = $2 RETURNING id, username, email, created_at",
-      [passwordHash, username]
+      "SELECT id, email FROM users WHERE email = $1",
+      [email.toLowerCase()]
     );
+
+    if (result.rows.length === 0) {
+      return res.status(200).json({
+        message: "If that email exists, a reset link has been sent.",
+      });
+    }
 
     const user = result.rows[0];
 
-    const token = jwt.sign(
-      { userId: user.id, email: user.email, username: user.username },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+    const resetToken = randomBytes(32).toString("hex");
+
+    const hashedToken = createHash("sha256").update(resetToken).digest("hex");
+
+    const expiresAt = Date.now() + 3600000;
+
+    await db.query(
+      "UPDATE users SET reset_password_token = $1, reset_password_expires = $2 WHERE id = $3",
+      [hashedToken, expiresAt, user.id]
     );
 
-    res.status(201).json({
-      user: {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-      },
-      token,
+    await sendPasswordResetEmail(user.email, resetToken);
+
+    res.status(200).json({
+      message: "Password reset email sent successfully",
     });
   } catch (error) {
-    return res.status(500).json({ error: "error updating your password" });
+    console.error("Forgot password error:", error);
+    res.status(500).json({
+      message: "Error processing request. Please try again later.",
+    });
+  }
+}
+
+async function updatePassword(req, res) {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({
+        message: "Token and new password are required",
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        message: "Password must be at least 8 characters long",
+      });
+    }
+
+    const hashedToken = createHash("sha256").update(token).digest("hex");
+
+    const result = await db.query(
+      `SELECT id, email FROM users 
+       WHERE reset_password_token = $1 
+       AND reset_password_expires > $2`,
+      [hashedToken, Date.now()]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(400).json({
+        message: "Invalid or expired reset token",
+      });
+    }
+
+    const user = result.rows[0];
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await db.query(
+      `UPDATE users 
+       SET password_hash = $1, 
+           reset_password_token = NULL, 
+           reset_password_expires = NULL 
+       WHERE id = $2`,
+      [hashedPassword, user.id]
+    );
+
+    res.status(200).json({
+      message:
+        "Password reset successfully. You can now log in with your new password.",
+    });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    res.status(500).json({
+      message: "Error resetting password. Please try again.",
+    });
   }
 }
 
@@ -196,4 +256,5 @@ module.exports = {
   getCurrentUser,
   registerWithCode,
   updatePassword,
+  forgotPassword,
 };

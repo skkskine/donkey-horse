@@ -24,5 +24,5 @@ app.get("/health", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server in ascolto su http://localhost:${PORT}`);
+  console.log(`Server in ascolto su http://localhost:${PORT}`);
 });

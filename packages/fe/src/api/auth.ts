@@ -56,7 +56,7 @@ export async function registerWithCode(data: RegisterWithCodeData) {
 }
 
 export async function updatePassword(data: UpdatePasswordData) {
-  const response = await authenticatedFetch(`auth/update-password`, {
+  const response = await notAuthenticatedFetch(`auth/update-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

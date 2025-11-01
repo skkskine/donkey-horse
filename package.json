@@ -26,5 +26,8 @@
   "workspaces": [
     "packages/fe",
     "packages/be"
-  ]
+  ],
+  "dependencies": {
+    "nodemailer": "^7.0.10"
+  }
 }
