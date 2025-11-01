@@ -9,6 +9,8 @@ import Invite from "../features/invite/Invite";
 import Account from "../features/account/Account";
 import Contacts from "../features/contacts/Contacts";
 import NotFound from "../features/not-found/NotFound";
+import ForgotPassword from "../features/forgot-password/ForgotPassoword";
+import PasswordReset from "../features/password-reset/PasswordReset";
 
 export const router = createBrowserRouter([
   {
@@ -19,11 +21,7 @@ export const router = createBrowserRouter([
       { path: "/login", element: <Login /> },
       {
         path: "/register",
-        element: (
-          <ProtectedRoute>
-            <Register />
-          </ProtectedRoute>
-        ),
+        element: <Register />,
       },
       { path: "/register/:invitationid", element: <Register /> },
       {
@@ -57,6 +55,14 @@ export const router = createBrowserRouter([
             <Account />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "/forgot-password",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "/reset-password",
+        element: <PasswordReset />,
       },
       {
         path: "/contacts",

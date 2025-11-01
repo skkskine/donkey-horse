@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import ForgotPasswordLink from "../../components/ForgotPasswordLink";
 
 export function Login() {
   const [username, setUsername] = useState("");
@@ -47,9 +48,11 @@ export function Login() {
         required
       />
 
+      <ForgotPasswordLink></ForgotPasswordLink>
+
       <button
         type="submit"
-        className="border p-2 rounded-md mt-3 hover:bg-white hover:text-black hover:cursor-pointer"
+        className="border p-2 rounded-md mt-2 hover:bg-white hover:text-black hover:cursor-pointer"
         disabled={isLoading}
       >
         {isLoading ? "loading..." : "login"}

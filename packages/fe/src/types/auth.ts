@@ -14,6 +14,6 @@ export interface RegisterWithCodeData extends RegisterData {
 }
 
 export interface UpdatePasswordData {
-  username: string;
-  password: string;
+  token: string;
+  newPassword: string;
 }
