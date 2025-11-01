@@ -21,8 +21,8 @@ services:
 
   backend:
     build:
-      context: ./packages/be
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: packages/be/Dockerfile
     container_name: donkeyhorse-backend
     restart: unless-stopped
     environment:
@@ -46,8 +46,8 @@ services:
 
   frontend:
     build:
-      context: ./packages/fe
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: packages/fe/Dockerfile
 
       args:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:4200}

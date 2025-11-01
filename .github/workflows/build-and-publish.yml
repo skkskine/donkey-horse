@@ -50,7 +50,7 @@ jobs:
         id: push-frontend
         uses: docker/build-push-action@v5
         with:
-          context: ./packages/fe
+          context: .
           file: ./packages/fe/Dockerfile
           push: true
           tags: |
@@ -63,7 +63,7 @@ jobs:
         id: push-backend
         uses: docker/build-push-action@v5
         with:
-          context: ./packages/be
+          context: .
           file: ./packages/be/Dockerfile
           push: true
           tags: |
