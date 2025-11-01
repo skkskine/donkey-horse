@@ -41,6 +41,11 @@ DATABASE_URL='postgresql://<your-user>:<your-password>@localhost:5432/<your-data
 JWT_SECRET='<your-super-secret-jwt-key-minimum-32-characters-long>'
 JWT_EXPIRES_IN='7d'
 VITE_API_BASE_URL='http://localhost:<frontend-port>'
+EMAIL_USER=<smtp-user>
+EMAIL_PASSWORD=<stmp-password>
+EMAIL_HOST=<stmp-host>
+EMAIL_PORT=<stmp-port>
+
 ```
 
 start both frontend and backend
@@ -71,6 +76,12 @@ JWT_EXPIRES_IN='7d'
 # fe
 FRONTEND_PORT=<your-port> #(usually 80)
 VITE_API_BASE_URL='http://localhost:<frontend-port>'
+
+#smtp
+EMAIL_USER=<smtp-user>
+EMAIL_PASSWORD=<stmp-password>
+EMAIL_HOST=<stmp-host>
+EMAIL_PORT=<stmp-port>
 ```
 
 build and start the containers
