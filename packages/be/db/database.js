@@ -1,5 +1,5 @@
 const { Pool } = require("pg");
-const { ensureTables } = require("./initDb");
+const { createFirstUser } = require("./initDb");
 
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
@@ -26,7 +26,7 @@ try {
   });
 
   setTimeout(() => {
-    ensureTables(pool);
+    createFirstUser(pool);
   }, 2000);
 
   module.exports = {

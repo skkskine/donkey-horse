@@ -1,42 +1,7 @@
 const bcrypt = require("bcrypt");
 
-async function ensureTables(pool) {
+async function createFirstUser(pool) {
   try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS events (
-         id BIGINT PRIMARY KEY DEFAULT (floor(random() * 1000000000000)::BIGINT),
-        name VARCHAR(255) NOT NULL,
-        venue TEXT NOT NULL,
-        eventdate DATE NOT NULL,
-        eventtime TIME,
-        link TEXT,
-        city TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id BIGINT PRIMARY KEY DEFAULT (floor(random() * 1000000000000)::BIGINT),
-        email VARCHAR(255) UNIQUE NOT NULL,
-        password_hash VARCHAR(255) NOT NULL,
-        username VARCHAR(255),
-        reset_password_token VARCHAR(255),
-        reset_password_expires BIGINT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS invitelinks (
-        id BIGINT PRIMARY KEY DEFAULT (floor(random() * 1000000000000)::BIGINT),
-        invitationid VARCHAR(255) NOT NULL,
-        isvalid BOOLEAN DEFAULT TRUE
-      )
-    `);
-
-    console.log("✅ db tables are ready");
-
     // create the first user if none are present
     await seedAdminUser(pool);
   } catch (error) {
@@ -78,4 +43,4 @@ async function seedAdminUser(pool) {
   }
 }
 
-module.exports = { ensureTables };
+module.exports = { createFirstUser };
