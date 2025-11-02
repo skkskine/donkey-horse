@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS invitelinks (
+    id BIGINT PRIMARY KEY DEFAULT (floor(random() * 1000000000000)::BIGINT),
+    invitationid VARCHAR(255) NOT NULL,
+    isvalid BOOLEAN DEFAULT TRUE
+);

@@ -25,6 +25,7 @@
   "homepage": "https://github.com/skkskine/donkey-horse#readme",
   "workspaces": [
     "packages/fe",
-    "packages/be"
+    "packages/be",
+    "packages/migrations"
   ]
 }
