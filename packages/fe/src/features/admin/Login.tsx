@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import ForgotPasswordLink from "../../components/ForgotPasswordLink";
+import Input from "../../components/Input";
 
 export function Login() {
   const [username, setUsername] = useState("");
@@ -29,10 +30,10 @@ export function Login() {
 
   return (
     <form
-      className="text-sm flex w-full mx-auto max-w-60 flex-col items-center gap-3 [&>input]:border-b [&>input]:outline-0 [&>input]:w-full"
+      className="text-sm flex w-full mx-auto max-w-60 flex-col items-center gap-3"
       onSubmit={handleSubmit}
     >
-      <input
+      <Input
         type="username"
         placeholder="username"
         value={username}
@@ -40,7 +41,7 @@ export function Login() {
         required
       />
 
-      <input
+      <Input
         type="password"
         placeholder="Password"
         value={password}

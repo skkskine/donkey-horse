@@ -4,6 +4,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { checkIfInvitationidIsCorrect } from "../../api/invite";
 import { useQuery } from "@tanstack/react-query";
+import Input from "../../components/Input";
 
 export function Register() {
   const [email, setEmail] = useState("");
@@ -61,10 +62,10 @@ export function Register() {
         <>
           <p className="text-sm mb-4">register your account</p>
           <form
-            className="text-sm flex w-full mx-auto max-w-60 flex-col items-center gap-3 [&>input]:border-b [&>input]:outline-0 [&>input]:w-full"
+            className="text-sm flex w-full mx-auto max-w-60 flex-col items-center gap-3"
             onSubmit={handleSubmit}
           >
-            <input
+            <Input
               type="text"
               id="username"
               placeholder="username"
@@ -72,7 +73,7 @@ export function Register() {
               onChange={(e) => setUsername(e.target.value)}
             />
 
-            <input
+            <Input
               type="email"
               id="email"
               placeholder="email"
@@ -81,7 +82,7 @@ export function Register() {
               required
             />
 
-            <input
+            <Input
               type="password"
               id="password"
               placeholder="password"
@@ -91,7 +92,7 @@ export function Register() {
               minLength={8}
             />
 
-            <input
+            <Input
               type="password"
               id="confirmPassword"
               placeholder="confirm password"

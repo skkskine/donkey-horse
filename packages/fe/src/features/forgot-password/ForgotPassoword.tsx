@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button from "../../components/Button";
 import { useMutation } from "@tanstack/react-query";
 import { forgotPassword } from "../../api/password";
+import Input from "../../components/Input";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -19,10 +20,9 @@ export default function ForgotPassword() {
 
   return (
     <form className="max-w-60 text-sm" onSubmit={handleSubmit}>
-      <input
+      <Input
         type="email"
         placeholder="email"
-        className="border-b outline-0 w-full"
         required
         onChange={(e) => setEmail(e.target.value)}
       />

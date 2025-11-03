@@ -3,6 +3,7 @@ import Button from "../../components/Button";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import Input from "../../components/Input";
 
 export default function PasswordReset() {
   const [newPassword, setNewPassword] = useState("");
@@ -30,7 +31,7 @@ export default function PasswordReset() {
 
   return (
     <form className="max-w-60 text-sm" onSubmit={handleSubmit}>
-      <input
+      <Input
         type="password"
         placeholder="new password"
         className="border-b outline-0 w-full"

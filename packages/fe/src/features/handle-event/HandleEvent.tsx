@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Event } from "../../types/events";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../components/Button";
+import Input from "../../components/Input";
 
 interface Prop {
   type: "add" | "edit";
@@ -120,25 +121,25 @@ export default function HandleEvent({ type }: Prop) {
       <p className="text-sm mb-3">{type} your event</p>
       <form
         onSubmit={handleSubmit}
-        className="text-sm flex w-full mx-auto max-w-60 flex-col items-center gap-3 [&>input]:border-b [&>input]:outline-0 [&>input]:w-full"
+        className="text-sm flex w-full mx-auto max-w-60 flex-col items-center gap-3"
       >
-        <input
+        <Input
           name="name"
           placeholder="name*"
           required
           value={formData.name}
           disabled={isSubmitting}
           onChange={handleChange}
-        ></input>
-        <input
+        ></Input>
+        <Input
           name="venue"
           placeholder="venue*"
           required
           value={formData.venue}
           disabled={isSubmitting}
           onChange={handleChange}
-        ></input>
-        <input
+        ></Input>
+        <Input
           name="eventdate"
           placeholder="event date*"
           type="date"
@@ -147,8 +148,8 @@ export default function HandleEvent({ type }: Prop) {
           value={formData.eventdate}
           disabled={isSubmitting}
           onChange={handleChange}
-        ></input>
-        <input
+        ></Input>
+        <Input
           name="eventtime"
           placeholder="00:00"
           step="60"
@@ -156,21 +157,21 @@ export default function HandleEvent({ type }: Prop) {
           value={formData.eventtime}
           disabled={isSubmitting}
           onChange={handleChange}
-        ></input>
-        <input
+        ></Input>
+        <Input
           name="city"
           placeholder="city"
           value={formData.city}
           disabled={isSubmitting}
           onChange={handleChange}
-        ></input>
-        <input
+        ></Input>
+        <Input
           name="link"
           placeholder="link"
           value={formData.link}
           disabled={isSubmitting}
           onChange={handleChange}
-        ></input>
+        ></Input>
         <Button type="submit" className="mt-4" disabled={isSubmitting}>
           {type} event
         </Button>
