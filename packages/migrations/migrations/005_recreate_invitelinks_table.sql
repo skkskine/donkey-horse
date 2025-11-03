@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS invitelinks;
 
 CREATE TABLE
-    invitelinks (
+    IF NOT EXISTS invitelinks (
         id BIGSERIAL PRIMARY KEY,
         invitationid VARCHAR(255) NOT NULL,
         isvalid BOOLEAN DEFAULT TRUE,

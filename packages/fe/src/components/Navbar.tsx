@@ -26,6 +26,12 @@ export default function Navbar() {
         invite
       </NavLink>
       <NavLink
+        to="/settings"
+        className={({ isActive }) => highlightCurrentPage(isActive)}
+      >
+        settings
+      </NavLink>
+      <NavLink
         to="/account"
         className={({ isActive }) => highlightCurrentPage(isActive)}
       >

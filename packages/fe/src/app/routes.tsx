@@ -9,6 +9,7 @@ import Invite from "../features/invite/Invite";
 import Account from "../features/account/Account";
 import Contacts from "../features/contacts/Contacts";
 import NotFound from "../features/not-found/NotFound";
+import Settings from "../features/settings/Settings";
 import ForgotPassword from "../features/forgot-password/ForgotPassoword";
 import PasswordReset from "../features/password-reset/PasswordReset";
 
@@ -53,6 +54,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Account />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/settings",
+        element: (
+          <ProtectedRoute>
+            <Settings />
           </ProtectedRoute>
         ),
       },

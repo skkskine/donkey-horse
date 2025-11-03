@@ -8,6 +8,7 @@ if (process.env.NODE_ENV !== "production") {
 const authRoutes = require("./routes/auth");
 const eventsRouter = require("./routes/events");
 const inviteRouter = require("./routes/invite");
+const settingsRouter = require("./routes/settings");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,7 +17,7 @@ app.use(cors({ origin: process.env.VITE_API_BASE_URL }));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
-app.use("/api", eventsRouter, inviteRouter);
+app.use("/api", eventsRouter, inviteRouter, settingsRouter);
 
 // health check
 app.get("/health", (req, res) => {
