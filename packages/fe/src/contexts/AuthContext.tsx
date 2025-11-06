@@ -49,7 +49,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.getItem("token")
   );
   const [isLoading, setIsLoading] = useState(true);
-  const isUserLoaded = user !== undefined;
+
+  function isAuthenticated() {
+    if (!token) {
+      return false;
+    }
+    if (user === undefined) {
+      return undefined;
+    }
+    return !!user;
+  }
 
   useEffect(() => {
     if (!token) {
@@ -132,7 +141,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         registerWithCode,
         logout,
         updatePassword,
-        isAuthenticated: isUserLoaded ? !!user : undefined,
+        isAuthenticated: isAuthenticated(),
         isLoading,
       }}
     >
