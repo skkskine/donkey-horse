@@ -21,7 +21,7 @@ type User = {
 };
 
 type AuthContextType = {
-  user: User | null;
+  user: User | null | undefined;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (
@@ -37,18 +37,25 @@ type AuthContextType = {
   ) => Promise<void>;
   updatePassword: (token: string, newPassword: string) => Promise<void>;
   logout: () => void;
-  isAuthenticated: boolean;
+  isAuthenticated: boolean | undefined;
   isLoading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   );
   const [isLoading, setIsLoading] = useState(true);
+  const isUserLoaded = user !== undefined;
+
+  useEffect(() => {
+    if (!token) {
+      setUser(null);
+    }
+  }, []);
 
   useEffect(() => {
     async function checkAuth() {
@@ -125,7 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         registerWithCode,
         logout,
         updatePassword,
-        isAuthenticated: !!user,
+        isAuthenticated: isUserLoaded ? !!user : undefined,
         isLoading,
       }}
     >

@@ -49,7 +49,7 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
         {event.city && (
           <span className="italic text-green-300 text-sm">
             {" "}
-            &#60;{event.city}&#62;
+            &#60;{event.city.toLocaleLowerCase()}&#62;
           </span>
         )}
       </div>
