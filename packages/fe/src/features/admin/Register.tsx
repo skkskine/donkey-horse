@@ -34,7 +34,7 @@ export function Register() {
       return;
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       setError("password should be at least 8 characters");
       return;
     }
@@ -44,15 +44,15 @@ export function Register() {
     try {
       if (isAuthenticated) {
         await register(email, password, username);
-      }
-      if (!isAuthenticated && invitationid) {
+        navigate("/");
+      } else if (invitationid) {
         await registerWithCode(email, password, username, invitationid);
+        navigate("/login");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "registration error");
     } finally {
       setIsLoading(false);
-      navigate("/login");
     }
   };
 

@@ -6,6 +6,12 @@ interface Prop {
   isAuthenticated: boolean;
 }
 
+// formats 'YYYY-MM-DD' as 'DD/MM' without timezone conversions
+function formatDate(date: string) {
+  const [, month, day] = date.slice(0, 10).split("-");
+  return `${day}/${month}`;
+}
+
 function formatTime(time: string) {
   const timeWithoutTimezone = time.split("+")[0];
   return timeWithoutTimezone.substring(0, 5);
@@ -21,10 +27,7 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
       )}
       <div className="shrink-0">
         <span className="text-orange-300 italic">
-          {new Date(event.eventdate).toLocaleDateString("it-IT", {
-            day: "2-digit",
-            month: "2-digit",
-          })}
+          {formatDate(event.eventdate)}
         </span>
         <span className="text-blue-600 hidden sm:inline">{" ---> "}</span>
       </div>
@@ -35,6 +38,7 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
           <a
             href={event.link}
             target="_blank"
+            rel="noopener noreferrer"
             className="underline text-yellow-300"
           >
             {event.venue.toLowerCase()}

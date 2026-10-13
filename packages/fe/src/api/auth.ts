@@ -7,22 +7,13 @@ import type {
 import { authenticatedFetch, notAuthenticatedFetch } from "./methods";
 
 export async function login(credentials: LoginCredentials) {
-  try {
-    const response = await notAuthenticatedFetch(`auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
-    });
+  const response = await notAuthenticatedFetch(`auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || "login error");
-    }
-
-    return response.json();
-  } catch {
-    throw new Error("credentials are not valid");
-  }
+  return response.json();
 }
 
 export async function register(data: RegisterData) {
@@ -31,11 +22,6 @@ export async function register(data: RegisterData) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "regstration error");
-  }
 
   return response.json();
 }
@@ -47,11 +33,6 @@ export async function registerWithCode(data: RegisterWithCodeData) {
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "regstration error");
-  }
-
   return response.json();
 }
 
@@ -62,24 +43,16 @@ export async function updatePassword(data: UpdatePasswordData) {
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "update password error");
-  }
-
   return response.json();
 }
 
+// uses notAuthenticatedFetch so an expired token doesn't redirect public pages to /login
 export async function getCurrentUser(token: string) {
-  const response = await authenticatedFetch(`auth/me`, {
+  const response = await notAuthenticatedFetch(`auth/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-
-  if (!response.ok) {
-    throw new Error("token is not valid");
-  }
 
   return response.json();
 }

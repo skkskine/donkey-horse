@@ -30,23 +30,25 @@ npm install
 add '.env' file in ./packages/fe
 
 ```
-VITE_API_BASE_URL='http://localhost:<your-port>'
+VITE_API_BASE_URL='http://localhost:<backend-port>'
 ```
 
-and 'env' in ./packages/be
+and '.env' in ./packages/be
 
 ```
-PORT=<your-port>
+PORT=<backend-port>
 DATABASE_URL='postgresql://<your-user>:<your-password>@localhost:5432/<your-database>'
 JWT_SECRET='<your-super-secret-jwt-key-minimum-32-characters-long>'
 JWT_EXPIRES_IN='7d'
-VITE_API_BASE_URL='http://localhost:<frontend-port>'
+CORS_ORIGIN='http://localhost:5173' # frontend origin, comma separated if more than one
+FRONTEND_URL='http://localhost:5173' # used in the password reset email
 EMAIL_USER=<smtp-user>
 EMAIL_PASSWORD=<stmp-password>
 EMAIL_HOST=<stmp-host>
 EMAIL_PORT=<stmp-port>
-
 ```
+
+generate a secure `JWT_SECRET` with `openssl rand -hex 32`: the backend doesn't start if it's shorter than 32 characters
 
 start both frontend and backend
 
@@ -72,10 +74,15 @@ POSTGRES_DB='<your-database>'
 BACKEND_PORT=<your-port>
 JWT_SECRET='<your-super-secret-jwt-key-minimum-32-characters-long>'
 JWT_EXPIRES_IN='7d'
+CORS_ORIGIN='http://localhost' # frontend origin, comma separated if more than one
+FRONTEND_URL='http://localhost' # used in the password reset email
+# number of reverse proxies in front of the backend (e.g. 1 for traefik, 2 for cloudflare + traefik)
+# leave empty if the backend is reached directly
+TRUST_PROXY=
 
 # fe
 FRONTEND_PORT=<your-port> #(usually 80)
-VITE_API_BASE_URL='http://localhost:<frontend-port>'
+VITE_API_BASE_URL='http://localhost:<backend-port>'
 
 #smtp
 EMAIL_USER=<smtp-user>

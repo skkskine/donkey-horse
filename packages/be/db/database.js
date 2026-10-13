@@ -1,4 +1,4 @@
-const { Pool } = require("pg");
+const { Pool, types } = require("pg");
 const { createFirstUser } = require("./initDb");
 
 if (process.env.NODE_ENV !== "production") {
@@ -11,6 +11,11 @@ if (!process.env.DATABASE_URL) {
 }
 
 console.log("✅ DATABASE_URL configurato");
+
+// return DATE columns as plain 'YYYY-MM-DD' strings instead of js Date objects,
+// so the event date never shifts with the server or browser timezone
+const DATE_OID = 1082;
+types.setTypeParser(DATE_OID, (value) => value);
 
 try {
   const pool = new Pool({

@@ -15,6 +15,7 @@ export default function HandleEvent({ type }: Prop) {
     name: "",
     venue: "",
     eventdate: "",
+    eventtime: "",
     link: "",
     city: "",
   };
@@ -54,11 +55,11 @@ export default function HandleEvent({ type }: Prop) {
   // set the form values with the current event
   useEffect(() => {
     if (type === "edit" && data?.item) {
+      // the date input needs exactly 'YYYY-MM-DD' and the time input 'HH:MM'
       const event: Event = {
         name: data.item.name,
-        eventdate: new Date(data.item.eventdate)
-          .toISOString()
-          .split("T")[0] as unknown as string,
+        eventdate: String(data.item.eventdate).slice(0, 10),
+        eventtime: data.item.eventtime ? data.item.eventtime.slice(0, 5) : "",
         venue: data.item.venue,
         link: data.item.link || "",
         city: data.item.city || "",
@@ -66,13 +67,14 @@ export default function HandleEvent({ type }: Prop) {
 
       setFormData(event);
     }
-  }, [data]);
+  }, [data, type]);
   // ----
 
   // add mode
   const addMutation = useMutation({
     mutationFn: addEvent,
     onSuccess: () => {
+      setIsSubmitting(false);
       setFormData(initialValue);
       navigate("/");
     },
@@ -94,10 +96,7 @@ export default function HandleEvent({ type }: Prop) {
 
     setIsSubmitting(true);
 
-    const dataToSend = {
-      ...formData,
-      eventDate: new Date(formData.eventdate).toLocaleDateString("it-IT"),
-    };
+    const dataToSend = formData;
 
     if (type === "add") {
       addMutation.mutate(dataToSend);

@@ -61,21 +61,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    if (!token) {
-      setUser(null);
-    }
-  }, []);
-
-  useEffect(() => {
     async function checkAuth() {
       if (token) {
         try {
           const data = await getCurrentUser(token);
           setUser(data.user);
-        } catch (error) {
+        } catch {
           localStorage.removeItem("token");
           setToken(null);
         }
+      } else {
+        setUser(null);
       }
       setIsLoading(false);
     }
@@ -90,15 +86,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("token", data.token);
   };
 
+  // creates a new account without replacing the session of the logged user
   const register = async (
     email: string,
     password: string,
     username: string
   ) => {
-    const data = await apiRegister({ email, password, username });
-    setUser(data.user);
-    setToken(data.token);
-    localStorage.setItem("token", data.token);
+    await apiRegister({ email, password, username });
   };
 
   const registerWithCode = async (
@@ -118,17 +112,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("token", data.token);
   };
 
-  const updatePassword = async (token: string, newPassword: string) => {
-    const data = await apiUpdatePassword({ token, newPassword });
-    setUser(data.user);
-    setToken(data.token);
-    localStorage.setItem("token", data.token);
-  };
-
   const logout = () => {
     setUser(null);
     setToken(null);
     localStorage.removeItem("token");
+  };
+
+  // the reset doesn't return a session: the user logs in again with the new password
+  const updatePassword = async (resetToken: string, newPassword: string) => {
+    await apiUpdatePassword({ token: resetToken, newPassword });
+    logout();
   };
 
   return (

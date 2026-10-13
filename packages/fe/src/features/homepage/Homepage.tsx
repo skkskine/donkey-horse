@@ -6,9 +6,11 @@ import { useAuth } from "../../contexts/AuthContext";
 export default function Homepage() {
   const { isAuthenticated } = useAuth();
 
+  const range = isAuthenticated ? "full" : "next";
+
   const { data } = useQuery({
-    queryKey: ["getEvents"],
-    queryFn: () => getEvents(isAuthenticated ? "full" : "next"),
+    queryKey: ["getEvents", range],
+    queryFn: () => getEvents(range),
     enabled: isAuthenticated !== undefined,
   });
 

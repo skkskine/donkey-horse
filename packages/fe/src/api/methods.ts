@@ -1,5 +1,11 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// reads the error message sent by the backend, falling back to the http status
+async function responseError(response: Response) {
+  const body = await response.json().catch(() => ({}));
+  return new Error(body.error || body.message || response.statusText);
+}
+
 export async function notAuthenticatedFetch(
   endpoint: string,
   options: RequestInit = {}
@@ -13,7 +19,7 @@ export async function notAuthenticatedFetch(
   });
 
   if (!response.ok) {
-    throw new Error(`Errore: ${response.statusText}`);
+    throw await responseError(response);
   }
 
   return response;
@@ -44,7 +50,7 @@ export async function authenticatedFetch(
       localStorage.removeItem("token");
       window.location.href = "/login";
     }
-    throw new Error(`Errore: ${response.statusText}`);
+    throw await responseError(response);
   }
 
   return response;

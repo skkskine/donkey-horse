@@ -22,8 +22,12 @@ COPY --from=builder /app/package.json /app/package-lock.json ./
 COPY --from=builder /app/packages/be ./packages/be
 COPY --from=builder /app/packages/migrations ./packages/migrations
 
-RUN npm ci --workspace=packages/be --workspace=packages/migrations --omit=dev
+RUN npm ci --workspace=packages/be --workspace=packages/migrations --omit=dev \
+  && chown -R node:node /app
+
+USER node
 
 EXPOSE 4200
 
-CMD sh -c "cd /app && npm run migrate:up --workspace=packages/migrations && cd /app/packages/be && node server.js"
+# exec lets node receive SIGTERM from docker
+CMD ["sh", "-c", "npm run migrate:up --workspace=packages/migrations && cd /app/packages/be && exec node server.js"]

@@ -4,6 +4,8 @@ const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
   secure: false,
+  // never send credentials over a connection where STARTTLS was stripped
+  requireTLS: process.env.NODE_ENV === "production",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
@@ -11,7 +13,7 @@ const transporter = nodemailer.createTransport({
 });
 
 async function sendPasswordResetEmail(email, resetToken) {
-  const resetUrl = `${process.env.VITE_API_BASE_URL}/reset-password?token=${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${encodeURIComponent(resetToken)}`;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,

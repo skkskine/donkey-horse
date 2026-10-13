@@ -3,8 +3,8 @@ services:
     image: postgres:15-alpine
     container_name: donkeyhorse-db
     restart: unless-stopped
-    ports:
-      - "5432:5432"
+    # no published port: the backend reaches the database through app-network.
+    # for local debugging only, use "127.0.0.1:5432:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -28,14 +28,15 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: 4200
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-myapp}
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      DB_NAME: ${POSTGRES_DB:-myapp}
-      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
+      DATABASE_URL: postgresql://${POSTGRES_USER:?POSTGRES_USER must be set}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}@postgres:5432/${POSTGRES_DB:?POSTGRES_DB must be set}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost}
+      TRUST_PROXY: ${TRUST_PROXY:-}
+      EMAIL_HOST: ${EMAIL_HOST:-}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_USER: ${EMAIL_USER:-}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD:-}
     ports:
       - "${BACKEND_PORT:-4200}:4200"
     depends_on:

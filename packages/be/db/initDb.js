@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const { randomBytes } = require("crypto");
 
 async function createFirstUser(pool) {
   try {
@@ -21,7 +22,8 @@ async function seedAdminUser(pool) {
 
     const adminEmail = "admin@donkeyhorse.boo";
     const adminUsername = "admin";
-    const adminPassword = Math.random().toString(36).slice(2, 10);
+    const adminPassword =
+      process.env.ADMIN_PASSWORD || randomBytes(18).toString("base64url");
 
     console.log("\n============================\n");
     console.log("DATABASE CREDENTIALS");
