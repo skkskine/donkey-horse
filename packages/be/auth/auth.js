@@ -7,9 +7,34 @@ const { sendPasswordResetEmail } = require("../services/email");
 // thrown when the registration data is not valid, the message is safe to show to the client
 class RegistrationError extends Error {}
 
+const MAX_FIELD_LENGTH = 255;
+const INVITE_VALIDITY = "7 days";
+// bcrypt ignores everything after the first 72 bytes
+const MAX_PASSWORD_BYTES = 72;
+
+// compared when the username doesn't exist, so the response time doesn't reveal it
+const DUMMY_PASSWORD_HASH = bcrypt.hashSync(
+  randomBytes(16).toString("hex"),
+  10
+);
+
+function passwordError(password) {
+  if (password.length < 8) {
+    return "the password should be at least 8 characters long";
+  }
+  if (Buffer.byteLength(password, "utf8") > MAX_PASSWORD_BYTES) {
+    return "the password should be at most 72 characters long";
+  }
+  return null;
+}
+
 function signToken(user) {
   return jwt.sign(
-    { userId: user.id, username: user.username },
+    {
+      userId: user.id,
+      username: user.username,
+      tokenVersion: user.token_version,
+    },
     process.env.JWT_SECRET,
     { algorithm: "HS256", expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
   );
@@ -33,14 +58,24 @@ async function createUser(client, { email, password, username }) {
     throw new RegistrationError("email, password and username must be text");
   }
 
-  if (password.length < 8) {
-    throw new RegistrationError(
-      "the password should be at least 8 characters long"
-    );
+  const invalidPassword = passwordError(password);
+  if (invalidPassword) {
+    throw new RegistrationError(invalidPassword);
   }
 
   const normalizedEmail = normalizeEmail(email);
   const trimmedUsername = username.trim();
+
+  if (!trimmedUsername || trimmedUsername.length > MAX_FIELD_LENGTH) {
+    throw new RegistrationError("the username is not valid");
+  }
+
+  if (
+    normalizedEmail.length > MAX_FIELD_LENGTH ||
+    !/^[^\s@]+@[^\s@]+$/.test(normalizedEmail)
+  ) {
+    throw new RegistrationError("the email is not valid");
+  }
 
   const existingUser = await client.query(
     "SELECT id FROM users WHERE lower(email) = $1 OR username = $2",
@@ -56,7 +91,7 @@ async function createUser(client, { email, password, username }) {
 
   try {
     const result = await client.query(
-      "INSERT INTO users (email, password_hash, username) VALUES ($1, $2, $3) RETURNING id, email, username, created_at",
+      "INSERT INTO users (email, password_hash, username) VALUES ($1, $2, $3) RETURNING id, email, username, created_at, token_version",
       [normalizedEmail, passwordHash, trimmedUsername]
     );
     return result.rows[0];
@@ -94,8 +129,8 @@ async function registerWithCode(req, res) {
 
     // consume the code atomically, so it can't be used by concurrent requests
     const consumed = await client.query(
-      "UPDATE invitelinks SET isvalid = FALSE WHERE invitationid = $1 AND isvalid = TRUE RETURNING id",
-      [invitationid]
+      "UPDATE invitelinks SET isvalid = FALSE WHERE invitationid = $1 AND isvalid = TRUE AND created_at > NOW() - $2::interval RETURNING id",
+      [invitationid, INVITE_VALIDITY]
     );
 
     if (consumed.rows.length === 0) {
@@ -138,23 +173,31 @@ async function login(req, res) {
   try {
     const { username, password } = req.body;
 
-    if (!username || !password) {
-      return res.status(400).json({ error: "Email e password obbligatori" });
+    if (
+      !username ||
+      !password ||
+      typeof username !== "string" ||
+      typeof password !== "string"
+    ) {
+      return res
+        .status(400)
+        .json({ error: "username and password are required" });
     }
 
-    const result = await db.query("SELECT * FROM users WHERE username = $1", [
-      username,
-    ]);
-
-    if (result.rows.length === 0) {
-      return res.status(401).json({ error: "credentials are not valid" });
-    }
+    const result = await db.query(
+      "SELECT id, email, username, password_hash, token_version FROM users WHERE username = $1",
+      [username]
+    );
 
     const user = result.rows[0];
 
-    const validPassword = await bcrypt.compare(password, user.password_hash);
+    // always run bcrypt, so unknown and known usernames take the same time
+    const validPassword = await bcrypt.compare(
+      password,
+      user ? user.password_hash : DUMMY_PASSWORD_HASH
+    );
 
-    if (!validPassword) {
+    if (!user || !validPassword) {
       return res.status(401).json({ error: "credentials are not valid" });
     }
 
@@ -251,19 +294,39 @@ async function updatePassword(req, res) {
       });
     }
 
-    if (newPassword.length < 8) {
-      return res.status(400).json({
-        message: "Password must be at least 8 characters long",
-      });
+    const invalidPassword = passwordError(newPassword);
+    if (invalidPassword) {
+      return res.status(400).json({ message: invalidPassword });
     }
 
     const hashedToken = createHash("sha256").update(token).digest("hex");
 
-    const result = await db.query(
-      `SELECT id, email FROM users 
-       WHERE reset_password_token = $1 
-       AND reset_password_expires > $2`,
+    // cheap check first, so invalid tokens don't cost a bcrypt hash
+    const existing = await db.query(
+      "SELECT id FROM users WHERE reset_password_token = $1 AND reset_password_expires > $2",
       [hashedToken, Date.now()]
+    );
+
+    if (existing.rows.length === 0) {
+      return res.status(400).json({
+        message: "Invalid or expired reset token",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // a single statement consumes the token, so it can't be used twice,
+    // and bumping token_version logs out every existing session
+    const result = await db.query(
+      `UPDATE users
+       SET password_hash = $1,
+           reset_password_token = NULL,
+           reset_password_expires = NULL,
+           token_version = token_version + 1
+       WHERE reset_password_token = $2
+       AND reset_password_expires > $3
+       RETURNING id`,
+      [hashedPassword, hashedToken, Date.now()]
     );
 
     if (result.rows.length === 0) {
@@ -271,19 +334,6 @@ async function updatePassword(req, res) {
         message: "Invalid or expired reset token",
       });
     }
-
-    const user = result.rows[0];
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    await db.query(
-      `UPDATE users 
-       SET password_hash = $1, 
-           reset_password_token = NULL, 
-           reset_password_expires = NULL 
-       WHERE id = $2`,
-      [hashedPassword, user.id]
-    );
 
     res.status(200).json({
       message:
@@ -304,4 +354,5 @@ module.exports = {
   registerWithCode,
   updatePassword,
   forgotPassword,
+  INVITE_VALIDITY,
 };

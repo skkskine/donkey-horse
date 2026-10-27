@@ -20,8 +20,12 @@ async function seedAdminUser(pool) {
       return;
     }
 
-    const adminEmail = "admin@donkeyhorse.boo";
+    // the password reset link is sent to this address, so it must be one you control
+    const adminEmail = (process.env.ADMIN_EMAIL || "admin@example.invalid")
+      .trim()
+      .toLowerCase();
     const adminUsername = "admin";
+    const generatedPassword = !process.env.ADMIN_PASSWORD;
     const adminPassword =
       process.env.ADMIN_PASSWORD || randomBytes(18).toString("base64url");
 
@@ -29,8 +33,14 @@ async function seedAdminUser(pool) {
     console.log("DATABASE CREDENTIALS");
     console.log("CHANGE THE PASSWORD AFTER THE FIRST LOGIN");
     console.log("admin username", adminUsername);
-    console.log("admin password", adminPassword);
+    // never print a password chosen by the operator, logs are often kept and shared
+    if (generatedPassword) {
+      console.log("admin password", adminPassword);
+    }
     console.log("admin email", adminEmail);
+    if (!process.env.ADMIN_EMAIL) {
+      console.log("set ADMIN_EMAIL to be able to reset the admin password");
+    }
     console.log("\n============================\n");
 
     const passwordHash = await bcrypt.hash(adminPassword, 10);
