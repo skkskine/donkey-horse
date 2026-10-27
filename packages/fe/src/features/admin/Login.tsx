@@ -1,6 +1,6 @@
 // fe/src/components/Login.tsx
 import { useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/useAuth";
 import { useNavigate } from "react-router-dom";
 import ForgotPasswordLink from "../../components/ForgotPasswordLink";
 import Input from "../../components/Input";

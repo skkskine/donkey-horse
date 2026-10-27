@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/useAuth";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 

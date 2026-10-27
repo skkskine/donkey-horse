@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getEvents } from "../../api/events";
 import ListItem from "./components/ListItem";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/useAuth";
 
 export default function Homepage() {
   const { isAuthenticated } = useAuth();

@@ -8,8 +8,7 @@
     "dev:be": "npm run dev --workspace=backend",
     "dev": "npm run dev:fe & npm run dev:be",
     "build:fe": "npm run build --workspace=frontend",
-    "build:be": "npm run build --workspace=backend",
-    "build": "npm run build:fe && npm run build:be"
+    "build": "npm run build:fe"
   },
   "repository": {
     "type": "git",

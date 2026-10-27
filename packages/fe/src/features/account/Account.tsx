@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import Button from "../../components/Button";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/useAuth";
 import { useState } from "react";
 import { forgotPassword } from "../../api/password";
 

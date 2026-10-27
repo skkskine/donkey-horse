@@ -1,11 +1,5 @@
 // fe/src/contexts/AuthContext.tsx
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  type ReactNode,
-} from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import {
   login as apiLogin,
   register as apiRegister,
@@ -13,35 +7,7 @@ import {
   getCurrentUser,
   updatePassword as apiUpdatePassword,
 } from "../api/auth";
-
-type User = {
-  id: number;
-  email: string;
-  username: string;
-};
-
-type AuthContextType = {
-  user: User | null | undefined;
-  token: string | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (
-    email: string,
-    password: string,
-    username: string
-  ) => Promise<void>;
-  registerWithCode: (
-    email: string,
-    password: string,
-    username: string,
-    invitationid: string
-  ) => Promise<void>;
-  updatePassword: (token: string, newPassword: string) => Promise<void>;
-  logout: () => void;
-  isAuthenticated: boolean | undefined;
-  isLoading: boolean;
-};
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import { AuthContext, type User } from "./useAuth";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null | undefined>(undefined);
@@ -141,12 +107,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within AuthProvider");
-  }
-  return context;
 }
