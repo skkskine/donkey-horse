@@ -3,14 +3,15 @@ const db = require("../db/database");
 const router = express.Router();
 const authMiddleware = require("../middlewares/auth-middleware");
 const { randomUUID } = require("crypto");
+const { INVITE_VALIDITY } = require("../auth/auth");
 
 router.get("/invite/:invitationId", async (req, res) => {
   try {
     const { invitationId } = req.params;
 
     const result = await db.query(
-      "SELECT * FROM invitelinks WHERE invitationid = $1 AND isvalid = true",
-      [invitationId]
+      "SELECT id FROM invitelinks WHERE invitationid = $1 AND isvalid = true AND created_at > NOW() - $2::interval",
+      [invitationId, INVITE_VALIDITY]
     );
 
     if (result.rows.length === 0) {

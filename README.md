@@ -42,6 +42,7 @@ JWT_SECRET='<your-super-secret-jwt-key-minimum-32-characters-long>'
 JWT_EXPIRES_IN='7d'
 CORS_ORIGIN='http://localhost:5173' # frontend origin, comma separated if more than one
 FRONTEND_URL='http://localhost:5173' # used in the password reset email
+ADMIN_EMAIL=<your-email> # email of the first admin user, needed to reset its password
 EMAIL_USER=<smtp-user>
 EMAIL_PASSWORD=<stmp-password>
 EMAIL_HOST=<stmp-host>
@@ -76,6 +77,7 @@ JWT_SECRET='<your-super-secret-jwt-key-minimum-32-characters-long>'
 JWT_EXPIRES_IN='7d'
 CORS_ORIGIN='http://localhost' # frontend origin, comma separated if more than one
 FRONTEND_URL='http://localhost' # used in the password reset email
+ADMIN_EMAIL=<your-email> # email of the first admin user, needed to reset its password
 # number of reverse proxies in front of the backend (e.g. 1 for traefik, 2 for cloudflare + traefik)
 # leave empty if the backend is reached directly
 TRUST_PROXY=

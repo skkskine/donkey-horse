@@ -17,26 +17,34 @@ jobs:
           echo "Versione estratta: $VERSION"
 
       - name: Update root version
+        env:
+          VERSION: ${{ steps.get_version.outputs.version }}
         run: |
-          jq '.version = "${{ steps.get_version.outputs.version }}"' package.json > package.json.tmp
+          jq --arg v "$VERSION" '.version = $v' package.json > package.json.tmp
           mv package.json.tmp package.json
 
       - name: Update frontend version
+        env:
+          VERSION: ${{ steps.get_version.outputs.version }}
         run: |
           cd packages/fe
-          jq '.version = "${{ steps.get_version.outputs.version }}"' package.json > package.json.tmp
+          jq --arg v "$VERSION" '.version = $v' package.json > package.json.tmp
           mv package.json.tmp package.json
 
       - name: Update backend version
+        env:
+          VERSION: ${{ steps.get_version.outputs.version }}
         run: |
           cd packages/be
-          jq '.version = "${{ steps.get_version.outputs.version }}"' package.json > package.json.tmp
+          jq --arg v "$VERSION" '.version = $v' package.json > package.json.tmp
           mv package.json.tmp package.json
 
       - name: Update migrations version
+        env:
+          VERSION: ${{ steps.get_version.outputs.version }}
         run: |
           cd packages/migrations
-          jq '.version = "${{ steps.get_version.outputs.version }}"' package.json > package.json.tmp
+          jq --arg v "$VERSION" '.version = $v' package.json > package.json.tmp
           mv package.json.tmp package.json
 
       - name: Set up Docker Buildx
@@ -77,9 +85,11 @@ jobs:
             gnmrschnzs/donkeyhorse-be:latest
 
       - name: Commit and push version changes
+        env:
+          VERSION: ${{ steps.get_version.outputs.version }}
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add package.json packages/fe/package.json packages/be/package.json packages/migrations/package.json
-          git commit -m "chore: bump version to ${{ steps.get_version.outputs.version }}"
+          git commit -m "chore: bump version to $VERSION"
           git push origin HEAD:main
