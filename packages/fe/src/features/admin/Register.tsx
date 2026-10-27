@@ -1,6 +1,6 @@
 // fe/src/components/Register.tsx
 import { useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/useAuth";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { checkIfInvitationidIsCorrect } from "../../api/invite";
 import { useQuery } from "@tanstack/react-query";

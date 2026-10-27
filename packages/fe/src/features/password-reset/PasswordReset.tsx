@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "../../components/Button";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/useAuth";
 import Input from "../../components/Input";
 
 export default function PasswordReset() {
