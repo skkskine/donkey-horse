@@ -46,3 +46,5 @@ Publishing a GitHub release triggers `.github/workflows/build-and-publish.yml`: 
 - The backend isn't Prettier-formatted; don't reformat whole files, keep diffs to the lines you change.
 - Backend input validation is hand-written in each route (`validateEvent` in `routes/events.js`, `createUser` in `auth/auth.js`); always parameterize SQL.
 - `.claude/agents/quality-guardian.md` is a review subagent for code quality and OWASP security checks; use it after significant changes.
+- Before opening a PR: run `npm run lint --workspace=frontend` and `npm run build`, run quality-guardian on the diff, then open it with `gh pr create --base main`.
+- Commit messages must not include a `Co-Authored-By: Claude ...` trailer.
