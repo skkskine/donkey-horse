@@ -11,6 +11,7 @@ import Contacts from "../features/contacts/Contacts";
 import NotFound from "../features/not-found/NotFound";
 import ForgotPassword from "../features/forgot-password/ForgotPassoword";
 import PasswordReset from "../features/password-reset/PasswordReset";
+import Archive from "../features/archive/Archive";
 
 export const router = createBrowserRouter([
   {
@@ -64,6 +65,7 @@ export const router = createBrowserRouter([
         path: "/reset-password",
         element: <PasswordReset />,
       },
+      { path: "/archive", element: <Archive /> },
       {
         path: "/contacts",
         element: <Contacts />,

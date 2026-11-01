@@ -10,3 +10,17 @@ export interface Event {
 }
 
 export type EventData = Event & BaseEntity;
+
+export interface ArchiveFilters {
+  page: number;
+  from?: string;
+  to?: string;
+}
+
+export interface ArchivePage {
+  items: EventData[];
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+}

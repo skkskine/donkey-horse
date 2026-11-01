@@ -4,6 +4,7 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/auth-middleware");
 
 const MAX_TEXT_LENGTH = 255;
+const ARCHIVE_PAGE_SIZE = 10;
 
 function isValidText(value, required) {
   if (value === undefined || value === null || value === "") {
@@ -27,12 +28,20 @@ function isValidLink(link) {
   }
 }
 
+// 'YYYY-MM-DD' and a real calendar day (rejects e.g. 2024-02-30)
+function isValidDate(value) {
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false;
+  }
+  const date = new Date(`${value}T00:00:00Z`);
+  return !isNaN(date) && date.toISOString().slice(0, 10) === value;
+}
+
 // returns an error message, or null if the event is valid
 function validateEvent({ name, venue, eventdate, link, city, eventtime }) {
   if (!isValidText(name, true)) return "invalid name";
   if (!isValidText(venue, true)) return "invalid venue";
-  if (typeof eventdate !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(eventdate))
-    return "invalid date";
+  if (!isValidDate(eventdate)) return "invalid date";
   if (eventtime && !/^\d{2}:\d{2}(:\d{2})?$/.test(eventtime))
     return "invalid time";
   if (!isValidText(city, false)) return "invalid city";
@@ -62,6 +71,53 @@ router.get("/events", async (req, res) => {
       range === "full" ? allEventsQuery : nextEventsQuery
     );
     res.json({ items: result.rows });
+  } catch (error) {
+    console.error("Errore query:", error);
+    res.status(500).json({ error: "server error" });
+  }
+});
+
+// past events, most recent first, optionally filtered by a from/to date range
+router.get("/events/archive", async (req, res) => {
+  try {
+    const { page = "1", from, to } = req.query;
+
+    const pageNumber = Number(page);
+    if (
+      typeof page !== "string" ||
+      !/^\d+$/.test(page) ||
+      pageNumber < 1 ||
+      !Number.isSafeInteger(pageNumber)
+    ) {
+      return res.status(400).json({ error: "invalid page" });
+    }
+    if ((from && !isValidDate(from)) || (to && !isValidDate(to))) {
+      return res.status(400).json({ error: "invalid date" });
+    }
+    if (from && to && from > to) {
+      return res.status(400).json({ error: "invalid date range" });
+    }
+
+    const where =
+      "WHERE eventdate < CURRENT_DATE AND ($1::date IS NULL OR eventdate >= $1) AND ($2::date IS NULL OR eventdate <= $2)";
+    const filters = [from || null, to || null];
+
+    const [itemsResult, countResult] = await Promise.all([
+      db.query(
+        `SELECT * FROM events ${where} ORDER BY eventdate DESC, name ASC LIMIT $3 OFFSET $4`,
+        [...filters, ARCHIVE_PAGE_SIZE, (pageNumber - 1) * ARCHIVE_PAGE_SIZE]
+      ),
+      db.query(`SELECT COUNT(*)::int AS total FROM events ${where}`, filters),
+    ]);
+
+    const total = countResult.rows[0].total;
+    res.json({
+      items: itemsResult.rows,
+      page: pageNumber,
+      pageSize: ARCHIVE_PAGE_SIZE,
+      total,
+      totalPages: Math.max(1, Math.ceil(total / ARCHIVE_PAGE_SIZE)),
+    });
   } catch (error) {
     console.error("Errore query:", error);
     res.status(500).json({ error: "server error" });

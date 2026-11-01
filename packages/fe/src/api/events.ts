@@ -1,4 +1,9 @@
-import type { Event, EventData } from "../types/events";
+import type {
+  ArchiveFilters,
+  ArchivePage,
+  Event,
+  EventData,
+} from "../types/events";
 import { authenticatedFetch, notAuthenticatedFetch } from "./methods";
 
 export const getEvents = async (
@@ -6,6 +11,18 @@ export const getEvents = async (
 ): Promise<{ items: EventData[] }> => {
   const path = range === "full" ? "events?range=full" : "events";
   const res = await notAuthenticatedFetch(path);
+  return res.json();
+};
+
+export const getArchivedEvents = async ({
+  page,
+  from,
+  to,
+}: ArchiveFilters): Promise<ArchivePage> => {
+  const params = new URLSearchParams({ page: String(page) });
+  if (from) params.set("from", from);
+  if (to) params.set("to", to);
+  const res = await notAuthenticatedFetch(`events/archive?${params}`);
   return res.json();
 };
 

@@ -4,12 +4,13 @@ import type { EventData } from "../../../types/events";
 interface Prop {
   event: EventData;
   isAuthenticated: boolean;
+  showYear?: boolean;
 }
 
-// formats 'YYYY-MM-DD' as 'DD/MM' without timezone conversions
-function formatDate(date: string) {
-  const [, month, day] = date.slice(0, 10).split("-");
-  return `${day}/${month}`;
+// formats 'YYYY-MM-DD' as 'DD/MM' (or 'DD/MM/YYYY') without timezone conversions
+function formatDate(date: string, showYear: boolean) {
+  const [year, month, day] = date.slice(0, 10).split("-");
+  return showYear ? `${day}/${month}/${year}` : `${day}/${month}`;
 }
 
 function formatTime(time: string) {
@@ -17,7 +18,11 @@ function formatTime(time: string) {
   return timeWithoutTimezone.substring(0, 5);
 }
 
-export default function ListItem({ isAuthenticated, event }: Prop) {
+export default function ListItem({
+  isAuthenticated,
+  event,
+  showYear = false,
+}: Prop) {
   return (
     <div className="sm:flex mb-2 text-center sm:text-left">
       {isAuthenticated && (
@@ -27,7 +32,7 @@ export default function ListItem({ isAuthenticated, event }: Prop) {
       )}
       <div className="shrink-0">
         <span className="text-orange-300 italic">
-          {formatDate(event.eventdate)}
+          {formatDate(event.eventdate, showYear)}
         </span>
         <span className="text-blue-600 hidden sm:inline">{" ---> "}</span>
       </div>
