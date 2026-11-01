@@ -4,7 +4,8 @@ import packageJson from "../../package.json";
 export default function Footer() {
   return (
     <footer className="text-xs p-3">
-      donkey horse {packageJson.version} -{" "}
+      donkey horse {packageJson.version} - <Link to="/archive">archive</Link>
+      {" - "}
       <a href="https://github.com/skkskine/donkey-horse" target="_blank">
         github
       </a>
